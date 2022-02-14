@@ -1,5 +1,7 @@
 import { fromEvent } from 'rxjs';
-import { sampleTime } from 'rxjs/operators';//renderer.js里的导入Subject来源应该改为rxjs
+import { throttleTime } from '@tanbo/stream'
+
+//import { sampleTime } from 'rxjs/operators';//renderer.js里的导入Subject来源应该改为rxjs
 import {Layout} from '@textbus/editor'
 import {createElement, createTextNode, Plugin,SCROLL_CONTAINER} from "@textbus/browser";
 import {Renderer, RootComponentRef, VElement} from "@textbus/core";
@@ -88,7 +90,7 @@ export class OutlinesPlugin implements Plugin{
             fromEvent(this.btn, 'click').subscribe(() => {
                 this.expand = !this.expand;
             }),
-            this.renderer.onViewChecked.pipe(sampleTime(1000)).subscribe(() => this.onUpdateOutlines()),
+            this.renderer.onViewChecked.pipe(throttleTime(1000)).subscribe(() => this.onUpdateOutlines()),
         );
     }
     set expand(b) {
