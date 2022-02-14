@@ -1,0 +1,14 @@
+2.0要实现OutlinesPlugin是怎么个思路？DivisionAbstractComponent、BackboneAbstractComponent了吧
+更改备注
+1
+rxjs的导入
+
+2
+
+dropdown.js
+const label = createElement('span', {
+        classes: ['textbus-toolbar-dropdown-label'],
+        children: [
+            config.label ? createTextNode(config.label) : null
+        ]
+    });
