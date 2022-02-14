@@ -24,7 +24,7 @@
     "vue-router": "^3.5.3"
   },
   "devDependencies": {
-    "@tanbo/stream": "^0.0.9",
+    "@tanbo/stream": "^0.0.11",
     "@types/katex": "^0.11.1",
     "@vue/cli-plugin-babel": "4.5.13",
     "@vue/cli-plugin-typescript": "4.5.13",
