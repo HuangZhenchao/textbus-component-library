@@ -13,10 +13,11 @@ export const constantRoutes = [
   },
 
   {
-    path:'/textbus2',
+    path:'/textbus2/:filePath',
     component: () => import('@/views/Home.vue'),
     //redirect:'/tagManager/video',
     meta: { title: '标签管理', icon: 'figure' },
+    //query:{filePath:}
   },
 
 ]

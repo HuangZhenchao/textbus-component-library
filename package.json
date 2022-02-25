@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --host 0.0.0.0",
     "build": "vue-cli-service build"
   },
   "description": "VuejsApp2",
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@tanbo/di": "^1.0.4",
-    "@textbus/browser": "^2.0.0-alpha.19",
-    "@textbus/core": "^2.0.0-alpha.19",
-    "@textbus/editor": "^2.0.0-alpha.19",
+    "@textbus/browser": "^2.0.0-alpha.22",
+    "@textbus/core": "^2.0.0-alpha.22",
+    "@textbus/editor": "^2.0.0-alpha.22",
     "axios": "^0.25.0",
     "katex": "^0.15.2",
     "rxjs": "^6.0.0",

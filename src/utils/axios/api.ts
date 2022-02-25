@@ -11,6 +11,9 @@ class api {
         // 基于Base模块封装调用
         image: (param) => Request.post(`/api/upload/image`,param),
     }
+    public static r={
+        json:(param)=>Request.post('/api/r/json',param)
+    }
 }
 export {
     api

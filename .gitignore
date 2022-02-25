@@ -1,3 +1,5 @@
-# 项目排除路径
+﻿# 项目排除路径
 /dist/
 /node_modules/
+/.idea/
+/obj/
