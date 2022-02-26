@@ -50,14 +50,16 @@ import {
     textIndentFormatLoader,
     textIndentTool,
     Toolbar,
-    ulTool,
+    //ulTool,
     underlineFormatLoader,
     underlineTool,
     unlinkTool,
     verticalAlignFormatLoader,
     videoComponentLoader,
 } from '@textbus/editor';
+import {ulTool} from "@textbus/editor"
 import '@textbus/editor/bundles/textbus.min.css'
+import './assets/component-library.plugin.scss'
 //import './components/component-library.plugin.scss'
 //import './plugin/outlines-plugin/outlines.css'
 import {alertComponentLoader} from './components/alert/alert.component';
@@ -88,74 +90,77 @@ import { katexInlineComponentLoader } from './components/katex/katex.component';
 
 import { katexInlineTool } from './components/katex/katex.tool';
 import { katexGroupTool } from './components/katex/katex.goup.tool';
-import { jumbotronTool } from './components/jumbotron/jumbotron.tool';
+
 import { jumbotronComponentLoader } from './components/jumbotron/jumbotron.component';
-import { baiduMapTool } from './components/map/baiduMap.tool';
+
 import { baiduMapComponentLoader } from './components/map/baiduMap.component';
 import { tdtMapComponentLoader } from './components/map/tdtMap.component';
-import { tdtMapTool } from './components/map/tdtMap.tool';
+
 import { OutputPlugin } from './plugin/output.plugin';
 import { cesiumComponentLoader } from './components/map/cesium.component';
-import { cesiumTool } from './components/map/cesium.tool';
-import { selectTool } from './components/select/select.tool';
+
 import { selectComponentLoader } from './components/select/select.component';
 
+//处理文件上传的方法
+export function uploader(config) {
+    console.log('uploader')
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('multiple','multiple');//多选
+    switch (config.uploadType) {
+        case 'image':
+            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+            break;
+        case 'video':
+            fileInput.setAttribute('accept', 'video/mp4');
+            break;
+        case 'audio':
+            fileInput.setAttribute('accept', 'audio/ogg, audio/wav, audio/mpeg');
+            break;
+        default:
+            fileInput.setAttribute('accept', '*');
+    }
 
+    fileInput.style.cssText = 'position: absolute; left: -9999px; top: -9999px; opacity: 0';
+    const promise =  new Promise<string>(resolve => {
+        fileInput.addEventListener('change', event => {
+            const form = new FormData();
+            const el=event.target as HTMLInputElement;
+
+            for (const file of el.files!) {
+                //console.log('arrayBuffer',file.arrayBuffer())
+                form.append('file', file);
+            }
+            form.append('filename', 'file');
+            console.log(typeof el.files,el.files!)
+            document.body.removeChild(fileInput);
+            api.upload.image(form).then(response => {
+                let result=response.data;
+                let src=''
+                if(result.data.length==1){
+                    resolve(result.data[0].path);
+                }
+                result.data.forEach((i)=>{
+                    src+=i.path+';';
+                })
+                resolve(src);
+            })
+
+        })
+    })
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    return promise;
+
+}
 export const defaultOptions:EditorOptions = {
     editingStyleSheets: [
         `[style*=color]:not([style*=background-color])
-   a {color: inherit;}`,
+            a {color: inherit;}`,
         `a {text-decoration: underline; color: #449fdb; cursor: text;}`
     ],
     //处理文件上传的方法
-    uploader(config) {
-        console.log('uploader')
-        const fileInput = document.createElement('input');
-        fileInput.setAttribute('type', 'file');
-        fileInput.setAttribute('multiple','multiple');//多选
-        switch (config.uploadType) {
-            case 'image':
-                fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
-                break;
-            case 'video':
-                fileInput.setAttribute('accept', 'video/mp4');
-                break;
-            case 'audio':
-                fileInput.setAttribute('accept', 'audio/ogg, audio/wav, audio/mpeg');
-                break;
-            default:
-                fileInput.setAttribute('accept', '*');
-        }
-
-        fileInput.style.cssText = 'position: absolute; left: -9999px; top: -9999px; opacity: 0';
-        const promise =  new Promise<string>(resolve => {
-            fileInput.addEventListener('change', event => {
-                const form = new FormData();
-                const el=event.target as HTMLInputElement;
-
-                for (const file of el.files!) {
-                    //console.log('arrayBuffer',file.arrayBuffer())
-                    form.append('file', file);
-                }
-                form.append('filename', 'file');
-                console.log(typeof el.files,el.files!)
-                document.body.removeChild(fileInput);
-                api.upload.image(form).then(response => {
-                    let result=response.data;
-                    let src=''
-                    result.data.forEach((i)=>{
-                        src+=i.path+';';
-                    })
-                    resolve(src);
-                })
-
-            })
-        })
-        document.body.appendChild(fileInput);
-        fileInput.click();
-        return promise;
-
-    },
+    uploader,
     //组件加载
     componentLoaders: [
         alertComponentLoader,//
@@ -228,7 +233,6 @@ export const defaultOptions:EditorOptions = {
             [libraryTool],//自定义组件库
             //[imagesTool,imageCardTool],
             [katexGroupTool],//自定义,
-            [jumbotronTool,baiduMapTool,tdtMapTool,cesiumTool,selectTool]
 
         ]),
         new LinkJumpTipPlugin(),
@@ -239,14 +243,14 @@ export const defaultOptions:EditorOptions = {
         layoutPlugin
     ],
     providers:[
-        {provide:LayoutPlugin,useValue:layoutPlugin},
-        {provide:UIControlPanel,useValue:controlPanel}
+            {provide:LayoutPlugin,useValue:layoutPlugin},
+            {provide:UIControlPanel,useValue:controlPanel}
         ],
     //content:'<p>ddd</p>',
     content: `<div textbus-editable="off" class="tb-alert tb-alert-fill tb-alert-primary">
                 <div>这是 Alert 组件，这里的内容是不可以编辑的</div>
                 <div textbus-editable="on"><br></div></div>`,
-    placeholder: "占位12"
+    placeholder: "占位测试"
 };
 export function createEditor(selector,content) {
     

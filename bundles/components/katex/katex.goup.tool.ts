@@ -29,4 +29,6 @@ export function katexGroupToolConfigFactory(injector):GroupToolConfig{
             ]//[todoListTool,timelineTool,stepTool],
     };
 }
-export const katexGroupTool = new GroupTool(katexGroupToolConfigFactory);
+export function katexGroupTool(){
+    return new GroupTool(katexGroupToolConfigFactory);
+}

@@ -12,7 +12,6 @@ import {
 } from '@textbus/core'
 import { ComponentLoader, SlotParser } from '@textbus/browser'
 import { Injector } from '@tanbo/di'
-import {ComponentCreator} from "../type";
 import {useDragResize} from "@textbus/editor/bundles/components/_utils/drag-resize";
 export interface imageCardState{
     src: string;

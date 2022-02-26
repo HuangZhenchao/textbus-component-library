@@ -26,4 +26,7 @@ export function jumbotronToolConfigFactory(injector):ButtonToolConfig {
         }
     }
 }
-export const jumbotronTool:ButtonTool= new ButtonTool(jumbotronToolConfigFactory)
+
+export function jumbotronTool(){
+    return new ButtonTool(jumbotronToolConfigFactory)
+}

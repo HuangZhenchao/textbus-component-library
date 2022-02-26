@@ -21,4 +21,6 @@ export function baiduMapToolConfigFactory(injector):ButtonToolConfig {
         }
     }
 }
-export const baiduMapTool:ButtonTool= new ButtonTool(baiduMapToolConfigFactory)
+export function baiduMapTool(){
+    return new ButtonTool(baiduMapToolConfigFactory);
+}

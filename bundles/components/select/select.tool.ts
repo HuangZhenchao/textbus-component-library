@@ -20,4 +20,6 @@ export function selectToolConfigFactory(injector):ButtonToolConfig {
   }
 }
 
-export const selectTool:ButtonTool= new ButtonTool(selectToolConfigFactory)
+export function selectTool(){
+  return new ButtonTool(selectToolConfigFactory);
+}

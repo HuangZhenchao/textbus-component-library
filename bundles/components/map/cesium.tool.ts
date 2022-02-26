@@ -21,4 +21,6 @@ export function cesiumToolConfigFactory(injector):ButtonToolConfig {
         }
     }
 }
-export const cesiumTool:ButtonTool= new ButtonTool(cesiumToolConfigFactory)
+export function cesiumTool(){
+    return new ButtonTool(cesiumToolConfigFactory);
+}

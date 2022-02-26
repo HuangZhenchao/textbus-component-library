@@ -21,4 +21,6 @@ export function tdtMapToolConfigFactory(injector):ButtonToolConfig {
         }
     }
 }
-export const tdtMapTool:ButtonTool= new ButtonTool(tdtMapToolConfigFactory)
+export function tdtMapTool(){
+    return new ButtonTool(tdtMapToolConfigFactory);
+}

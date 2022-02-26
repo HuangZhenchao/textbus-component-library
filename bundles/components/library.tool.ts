@@ -6,7 +6,7 @@ import {ComponentCreator} from "./type";
 import {alertComponentCreator} from "./alert/alert.component";
 import {Observable,Subject} from "rxjs";
 
-import './component-library.plugin.scss'
+
 
 const CREATORS:ComponentCreator[]=[
     alertComponentCreator
@@ -130,4 +130,6 @@ export function libraryToolConfigFactory(injector):DropdownToolConfig {
     };
 
 }
-export const libraryTool = new DropdownTool(libraryToolConfigFactory);
+export function libraryTool(){
+    return new DropdownTool(libraryToolConfigFactory);
+}

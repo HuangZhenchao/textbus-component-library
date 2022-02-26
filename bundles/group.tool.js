@@ -4,12 +4,17 @@ import {blockquoteToolConfigFactory} from '@textbus/editor';
 
 import { alertToolConfigFactory } from './components/alert/alert.tool';
 import { imageCardToolConfigFactory } from './components/imageCard/imageCard.tool';
-import {imagesToolConfigFactory} from "./components/images/iamges.tool";
-import {wordExplainToolConfigFactory} from "./components/wordExplain/wordExplain.tool";
-import {stepToolConfigFactory} from "./components/step/step.tool";
-import {timelineToolConfigFactory} from "./components/timeline/timeline.tool";
-import {todoListToolConfigFactory} from "./components/todoList/todoList.tool";
-import {progressToolConfigFactory} from "./components/progress/progress.tool"
+import { imagesToolConfigFactory} from "./components/images/iamges.tool";
+import { wordExplainToolConfigFactory} from "./components/wordExplain/wordExplain.tool";
+import { stepToolConfigFactory} from "./components/step/step.tool";
+import { timelineToolConfigFactory} from "./components/timeline/timeline.tool";
+import { todoListToolConfigFactory} from "./components/todoList/todoList.tool";
+import { progressToolConfigFactory} from "./components/progress/progress.tool";
+import { jumbotronToolConfigFactory } from './components/jumbotron/jumbotron.tool';
+import { baiduMapToolConfigFactory } from './components/map/baiduMap.tool';
+import { tdtMapToolConfigFactory } from './components/map/tdtMap.tool';
+import { cesiumToolConfigFactory } from './components/map/cesium.tool';
+import { selectToolConfigFactory } from './components/select/select.tool';
 export function insertObjectToolConfigFactory(injector){
     const i18n = injector.get(I18n);
     return {
@@ -31,9 +36,16 @@ export function insertObjectToolConfigFactory(injector){
             Object.assign(Object.assign({}, stepToolConfigFactory(injector)), { type: ToolType.Button}),
             Object.assign(Object.assign({}, wordExplainToolConfigFactory(injector)), { type: ToolType.Button}),
             Object.assign(Object.assign({}, progressToolConfigFactory(injector)), { type: ToolType.Button}),
+            Object.assign(Object.assign({}, jumbotronToolConfigFactory(injector)), { type: ToolType.Button}),
+            Object.assign(Object.assign({}, baiduMapToolConfigFactory(injector)), { type: ToolType.Button}),
+            Object.assign(Object.assign({}, tdtMapToolConfigFactory(injector)), { type: ToolType.Button}),
+            Object.assign(Object.assign({}, cesiumToolConfigFactory(injector)), { type: ToolType.Button}),
+            Object.assign(Object.assign({}, selectToolConfigFactory(injector)), { type: ToolType.Button}),
             //Object.assign(Object.assign({}, leftToRightToolConfigFactory(injector)), { type: ToolType.Button, label: i18n.get('plugins.toolbar.insertObjectTool.leftToRight') }),
             //Object.assign(Object.assign({}, rightToLeftToolConfigFactory(injector)), { type: ToolType.Button, label: i18n.get('plugins.toolbar.insertObjectTool.rightToLeft') })
             ]//[todoListTool,timelineTool,stepTool],
     };
 }
-export const myGroupTool = new GroupTool(insertObjectToolConfigFactory);
+export function myGroupTool(){
+    return new GroupTool(insertObjectToolConfigFactory);
+}
