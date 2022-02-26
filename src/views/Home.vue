@@ -22,8 +22,8 @@ import {createEditor} from "../../bundles/createEditor"
           form.append('filePath',filePath)
           api.r.json(form).then(response=>{
               let content=response.data.data;
-              content='<p><div>123</div></p>'
-              const editor = createEditor(document.getElementById('editor')!,content)
+              content='<p><div>123</div></p>';
+              const editor = createEditor(document.getElementById('editor')!,content);
 
               editor.onChange.subscribe(() => {
                 //console.log(editor.getContents())

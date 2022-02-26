@@ -14,7 +14,6 @@ import {
   } from '@textbus/core'
   import {ComponentLoader, createElement, SlotParser} from '@textbus/browser'
   import { Injector } from '@tanbo/di'
-  import {ComponentCreator} from "../type";
   import {Form, FormSelect, FormSwitch} from "@textbus/editor";
   
   export interface selectState{
