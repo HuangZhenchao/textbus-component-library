@@ -43,6 +43,7 @@ class MarginSetter {
     update(value) {
         this.reset();
         if (value) {
+            
             const vars = (value + '').split(/\s+/g);
             vars.forEach((v, index) => {
                 this.inputs[index].value = v;
@@ -201,22 +202,22 @@ export function imagesToolConfigFactory(injector) {
         },
         useValue(formValue) {
             if (formValue) {
-                formValue.src.split(';').forEach(src=>{
+                formValue.get('src').split(';').forEach(src=>{
                     let value = {
                         src: src,
-                        margin: formValue.margin,
-                        float: formValue.float,
-                        maxWidth: formValue.maxSize.width,
-                        maxHeight: formValue.maxSize.height,
-                        width: formValue.size.width,
-                        height: formValue.size.height
+                        margin: formValue.get('margin'),
+                        float: formValue.get('float'),
+                        maxWidth: formValue.get('maxSize').width,
+                        maxHeight: formValue.get('maxSize').height,
+                        width: formValue.get('size').width,
+                        height: formValue.get('size').height
                     };
                     const state = query.queryWrappedComponent(imageComponent);
                     if (state.state === QueryStateType.Enabled) {
                         state.value.useState(value);
                     }
                     else if (value === void 0 ? void 0 : value.src) {
-                        commander.insert(imageComponent.createInstance(injector, value));
+                        commander.insert(imageComponent.createInstance(injector, {state:value}));
                     }
                 })
             }

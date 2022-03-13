@@ -10,14 +10,13 @@ export function stepToolConfigFactory(injector):ButtonToolConfig {
         tooltip:'插入 step 组件',
         onClick() {
 
-
-            const state:stepState={
-                step:0,
-                slots:[new StepSlot()]
+            let slots=[new StepSlot()];
+            const initState:stepState={
+                step:0,                
             }
-            const component = stepComponent.createInstance(injector, state)
+            const component = stepComponent.createInstance(injector, {slots:slots,state:initState})
             commander.insert(component)
-            selection.setLocation(state.slots[0], 0)
+            selection.setLocation(slots[0], 0)
         }
     }
 }

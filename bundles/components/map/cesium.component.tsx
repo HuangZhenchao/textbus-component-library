@@ -4,7 +4,7 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode, ComponentData
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -13,7 +13,6 @@ import { UIControlPanel } from "../control-panel.plugin";
 
 export interface cesiumMethods{
     render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    toJSON():any,
     createControlView():void
 }
 const ak='85dcab3699b288cd780476d37fa35805'
@@ -24,16 +23,11 @@ export interface cesiumState{
     zoom:any
 }
 
-export const cesiumComponent=defineComponent({
+export const cesiumComponent=defineComponent<cesiumMethods,cesiumState>({
     name: "cesiumComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: cesiumState): cesiumState {
-        return state;
-    },
-    setup(state: cesiumState): cesiumMethods {
-        const injector = useContext();        
-        const controlPanel=injector.get(UIControlPanel)
-        const fileUploader = injector.get(FileUploader);
+    setup(data: ComponentData<cesiumState>): cesiumMethods {
+        let state=data.state as cesiumState;
         const changeController=useState(state);
 
         //useState({fill:false,type:'info',slot:slots.toJSON()})
@@ -70,10 +64,6 @@ export const cesiumComponent=defineComponent({
                 //map.centerAndZoom(point, 15);
 
                 return vEle;
-            },
-
-            toJSON(){
-                return state
             },
             createControlView(){
                 /*
@@ -136,14 +126,14 @@ export const cesiumComponentLoader:ComponentLoader={
             zoom:16
         }
         //slotParser(state.slot,element)
-        return cesiumComponent.createInstance(context,state);
+        return cesiumComponent.createInstance(context,{state:state});
         
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
         
     },
     
     resources: {
-        scripts:['http://localhost:5382/cesium/Build/Cesium/Cesium.js','http://localhost:5382/textbus-cesium.js'],
+        scripts:['http://localhost:5382/cesium/Build/Cesium/Cesium.js','http://106.55.148.203:801/textbus-cesium.js'],
         styles: [
             `.tb-cesium,.map-container {
                 display: block;

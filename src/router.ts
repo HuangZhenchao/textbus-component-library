@@ -8,18 +8,33 @@ Vue.use(VueRouter);
 export const constantRoutes = [ 
   {
     path: '/',
-    redirect: '/textbus2',
+    redirect: '/textbus',
 
   },
-
   {
-    path:'/textbus2/:filePath',
+    path:'/textbus',
+    name:'textbus',
     component: () => import('@/views/Home.vue'),
     //redirect:'/tagManager/video',
     meta: { title: '标签管理', icon: 'figure' },
     //query:{filePath:}
   },
-
+  {
+    path:'/textbus2',
+    name:'textbus2',
+    component: () => import('@/views/Home.vue'),
+    //redirect:'/tagManager/video',
+    meta: { title: '标签管理', icon: 'figure' },
+    //query:{filePath:}
+  },
+  {
+    path:'/textbusTest',
+    name:'textbusTest',
+    component: () => import('@/views/Index.vue'),
+    //redirect:'/tagManager/video',
+    meta: { title: '标签管理', icon: 'figure' },
+    //query:{filePath:}
+  },
 ]
 
 

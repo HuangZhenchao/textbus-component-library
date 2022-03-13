@@ -4,7 +4,7 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode, ComponentData
 } from "@textbus/core";
 import {ComponentLoader, EDITABLE_DOCUMENT, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -13,7 +13,6 @@ import { UIControlPanel } from "../control-panel.plugin";
 let index=1;
 export interface baiduMapMethods{
     render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    toJSON():any,
     createControlView():void
 }
 const ak='aRsXEo3UFgKwRF6UGZCbNno5rTwlz2zH'
@@ -25,17 +24,15 @@ export interface baiduMapState{
     zoom:any
 }
 
-export const baiduMapComponent=defineComponent({
+export const baiduMapComponent=defineComponent<baiduMapMethods,baiduMapState>({
     name: "baiduMapComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: baiduMapState): baiduMapState {
-        return state;
-    },
-    setup(state: baiduMapState): baiduMapMethods {
+    setup(data: ComponentData<baiduMapState>): baiduMapMethods {
         const injector = useContext();        
         const controlPanel=injector.get(UIControlPanel)
         const fileUploader = injector.get(FileUploader);
         const doc = injector.get(EDITABLE_DOCUMENT);
+        let state=data.state as baiduMapState;
         const changeController=useState(state);
 
         //useState({fill:false,type:'info',slot:slots.toJSON()})
@@ -77,9 +74,6 @@ export const baiduMapComponent=defineComponent({
 
             },
 
-            toJSON(){
-                return state
-            },
             createControlView(){
                 /*
                 const form = new Form({
@@ -141,14 +135,14 @@ export const baiduMapComponentLoader:ComponentLoader={
             zoom:16
         }
         //slotParser(state.slot,element)
-        return baiduMapComponent.createInstance(context,state);
+        return baiduMapComponent.createInstance(context,{state:state});
         
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
         
     },
     
     resources: {
-        scripts:['https://api.map.baidu.com/getscript?type=webgl&v=1.0&ak='+ak,'http://localhost:5382/test.js'],//'https://api.map.baidu.com/getscript?type=webgl&v=1.0&ak='+ak,"http://localhost:5382/test.js"
+        scripts:['https://api.map.baidu.com/getscript?type=webgl&v=1.0&ak='+ak,'http://106.55.148.203:801/test.js'],//'https://api.map.baidu.com/getscript?type=webgl&v=1.0&ak='+ak,"http://localhost:5382/test.js"
         styles: [
             `.tb-baiduMap,.map-container {
                 display: block;

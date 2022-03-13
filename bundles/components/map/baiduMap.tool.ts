@@ -15,7 +15,7 @@ export function baiduMapToolConfigFactory(injector):ButtonToolConfig {
                 zoom:16
             }
             
-            const component = baiduMapComponent.createInstance(injector, state)
+            const component = baiduMapComponent.createInstance(injector, {state:state})
             commander.insert(component)
             //selection.setLocation(headingSlot, headingSlot.length)
         }

@@ -14,10 +14,10 @@ export function timelineToolConfigFactory(injector):ButtonToolConfig {
             let state:timelineSlot={
                 itemSlots:[slot]
             }
-            const component = timelineComponent.createInstance(injector, state)
+            const component = timelineComponent.createInstance(injector, {slots:[slot]})
             console.log('component',component)
             commander.insert(component)
-            //selection.setLocation(slot, 0)
+            selection.setLocation(slot, 0)
         }
     }
 }

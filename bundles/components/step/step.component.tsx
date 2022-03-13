@@ -1,4 +1,5 @@
 import {
+  ComponentData,
     ComponentInstance,
     ComponentMethods,
     ContentType,
@@ -19,54 +20,40 @@ export class StepSlot extends Slot{
     }
 }
 export interface stepState{
-    slots:StepSlot[],
     step:number
 }
-export interface stepSlotLiteral{
-    slotLiterals:SlotLiteral[],
-    step:number
-}
-export const stepComponent=defineComponent<ComponentMethods,stepSlotLiteral,stepState>({
+
+export const stepComponent=defineComponent<ComponentMethods,stepState>({
     name: "stepComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: stepSlotLiteral): stepState {
-        return {
-            step:state.step,
-            slots:state.slotLiterals.map(slotLiteral=>{
-                return translator.createSlot(slotLiteral)
-            })
-        }
-    },
-    setup(initState: stepState): ComponentMethods {
+
+    setup(data: ComponentData<stepState>): ComponentMethods {
         const injector = useContext();
         const translator=injector.get(Translator);
-        const slots = useSlots(initState.slots || [ new StepSlot()], (value) => {
-            console.log('restore',value)
-            return new TimelineItemSlot('')
-        })
+        const slots = useSlots(data.slots || [ new StepSlot()])
 
-        let info={step:initState.step}
-        const changeController=useState(info);
+        let state=data.state as stepState;
+        const changeController=useState(state);
         changeController.onChange.subscribe(newState=>{
-            info=newState;
-            console.log('changeController',info)
+          state=newState;
+            console.log('changeController',state)
         })
         return {
             render(isOutputMode:boolean, slotRender:SlotRender){
 
                 const createItem = function(item,index){
                     let classes = 'tb-waiting';
-                    if (index < info.step) {
+                    if (index < state.step) {
                         classes = 'tb-complete';
                     }
-                    else if (index === info.step) {
+                    else if (index === state.step) {
                         classes = 'tb-current';
                     }
                     return VElement.createElement("div", { class: 'tb-step-item ' + classes },
                         VElement.createElement("div", { class: "tb-step-item-header" },
                             VElement.createElement("div", { class: "tb-step-item-line" }),
                             VElement.createElement("div", { class: "tb-step-item-icon", onClick: () => {
-                                    const currentStep = info.step;
+                                    const currentStep = state.step;
                                     let newStep=currentStep
                                     if (index === currentStep) {
                                         newStep = index + 1;
@@ -94,22 +81,13 @@ export const stepComponent=defineComponent<ComponentMethods,stepSlotLiteral,step
                 };
                 return VElement.createElement('div', {
                         class:'tb-step',
-                        step: info.step
+                        step: state.step||0
                     },
                     slots.toArray().map((slot,index) => {
                         return createItem(slot,index);
                     })
                 );
 
-            },
-
-            toJSON(){
-                return {
-                    step:info.step,
-                    slotLiterals:slots.toArray().map(slot=>{
-                        return slot.toJSON()
-                    })
-                }
             }
 
         }
@@ -123,15 +101,15 @@ export const stepComponentLoader:ComponentLoader={
         return element.tagName.toLowerCase() === 'div' && element.className === 'tb-step'
     },
     read(element: HTMLElement, context: Injector, slotParser: SlotParser) :ComponentInstance{
+      let slots=Array.from(element.children).map(child => {
+        return slotParser(new StepSlot(),child as HTMLElement)
+      })
         let initState:stepState={
-            step:Number(element.getAttribute('step'))||0,
-            slots:Array.from(element.children).map(child => {
-                return slotParser(new StepSlot(),child as HTMLElement)
-            })
+            step:Number(element.getAttribute('step'))||0,           
         }
 
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
-        return stepComponent.createInstance(context,initState);
+        return stepComponent.createInstance(context,{slots:slots,state:initState});
     },
     resources: {
         styles: [

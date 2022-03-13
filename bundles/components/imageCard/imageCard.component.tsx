@@ -1,4 +1,5 @@
 import {
+    ComponentData,
     ComponentInstance,
     ComponentMethods,
     ContentType,
@@ -21,31 +22,24 @@ export interface imageCardState{
     height?: string | undefined;
     margin?: string | undefined;
     float?: string | undefined;
-    slotLiteral:SlotLiteral;
 }
 
 
-export const imageCardComponent = defineComponent<ComponentMethods, imageCardState, imageCardState>({
+export const imageCardComponent = defineComponent<ComponentMethods, imageCardState>({
     type: ContentType.BlockComponent,
     name: 'imageCardComponent',
-    transform(translator: Translator, state: imageCardState): imageCardState {
-        return state
-    },
-    setup(state: imageCardState): ComponentMethods {
+
+    setup(data:ComponentData<imageCardState> ): ComponentMethods {
         const injector = useContext();
         const translator=injector.get(Translator);
-        const slots = useSlots([
-            translator.createSlot(state.slotLiteral) || new Slot([
+        const slots = useSlots(data.slots||[new Slot([
                 ContentType.Text
             ])
-        ], () => {
-            return new Slot([
-                ContentType.Text
-            ])
-        })
+        ])
+        let state= data.state as imageCardState
         const changeController = useState(state);
-        changeController.onChange.subscribe(v => {
-            state = v;
+        changeController.onChange.subscribe(newState => {
+            state = newState;
         });
         const ref:Ref<HTMLElement> = useRef();
         useDragResize(ref, rect => {
@@ -80,9 +74,7 @@ export const imageCardComponent = defineComponent<ComponentMethods, imageCardSta
                     })]
                 )
             },
-            toJSON(): any {
-                return Object.assign({}, state);
-            }
+            
         }
     }
 })
@@ -127,7 +119,7 @@ export const imageCardComponentLoader: ComponentLoader = {
         ])
         slotParser(slot, element.children[0]! as HTMLElement)
         const style = element.style;
-        return imageCardComponent.createInstance(context, {
+        const state={
             src: element.getAttribute('src') || '',
             width: style.width,
             height: style.height,
@@ -135,8 +127,9 @@ export const imageCardComponentLoader: ComponentLoader = {
             float: style.float,
             maxWidth: style.maxWidth,
             maxHeight: style.maxHeight,
-            slotLiteral:slot.toJSON()
-        })
+        }
+        
+        return imageCardComponent.createInstance(context,{slots:[slot],state:state} )
     }
 }
 

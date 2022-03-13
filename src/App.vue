@@ -1,18 +1,14 @@
 <template>
     <div id="app">
-        <Home msg="Hello world!" />
+        <router-view />
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
-    import Home from './views/Home.vue';
+    //import Index from './views/Index.vue';
 
-    @Component({
-        components: {
-            Home
-        }
-    })
+    
     export default class App extends Vue { }
 </script>
 

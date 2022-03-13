@@ -15,7 +15,7 @@ export function cesiumToolConfigFactory(injector):ButtonToolConfig {
                 zoom:16
             }
             
-            const component = cesiumComponent.createInstance(injector, state)
+            const component = cesiumComponent.createInstance(injector, {state:state})
             commander.insert(component)
             //selection.setLocation(headingSlot, headingSlot.length)
         }

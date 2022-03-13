@@ -14,13 +14,14 @@ export function jumbotronToolConfigFactory(injector):ButtonToolConfig {
                 backgroundSize: 'cover',
                 backgroundImage: './',
                 minHeight: '200px',
-                slot:new JumbotronSlot()
+                
             }
+            let slot=new JumbotronSlot()
             const headingSlot=new Slot([ContentType.Text,
                 ContentType.InlineComponent]);
             headingSlot.write('hello world!');
-            state.slot.write(headingComponent.createInstance(injector,{type:'h1',slot:headingSlot}))
-            const component = jumbotronComponent.createInstance(injector, state)
+            slot.write(headingComponent.createInstance(injector,{state:'h1',slots:[headingSlot]}))
+            const component = jumbotronComponent.createInstance(injector, {slots:[slot],state:state})
             commander.insert(component)
             selection.setLocation(headingSlot, headingSlot.length)
         }

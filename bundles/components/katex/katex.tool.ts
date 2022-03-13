@@ -14,7 +14,7 @@ export function katexInlineToolConfigFactory(injector):ButtonToolConfig {
                 source:`a b^{cd} efghijklmnopqrstuvwxyz`
                 
             }
-            const component = katexInlineComponent.createInstance(injector, state)
+            const component = katexInlineComponent.createInstance(injector, {state:state})
             commander.insert(component)
             //selection.setLocation(slot, 0)
         }
@@ -32,7 +32,7 @@ export function katexBlockToolConfigFactory(injector):ButtonToolConfig {
                 source:`a b^{cd} efghijklmnopqrstuvwxyz`
                 
             }
-            const component = katexBlockComponent.createInstance(injector, state)
+            const component = katexBlockComponent.createInstance(injector, {state:state})
             commander.insert(component)
             //selection.setLocation(slot, 0)
         }

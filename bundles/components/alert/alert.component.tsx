@@ -1,8 +1,6 @@
 import {
   Commander,
-  Component,
   ComponentInstance,
-  ComponentMethods,
   ContentType,
   defineComponent,
   Slot,
@@ -10,7 +8,7 @@ import {
   SlotRender, Selection,
   Translator, useContext,
   useSlots, useState,
-  VElement, VTextNode
+  VElement, VTextNode, ComponentData
 } from '@textbus/core'
 import {ComponentLoader, createElement, SlotParser} from '@textbus/browser'
 import { Injector } from '@tanbo/di'
@@ -20,49 +18,36 @@ import {Form, FormSelect, FormSwitch} from "@textbus/editor";
 export interface AlertState{
   fill:boolean;
   type:string;
-  slot: SlotLiteral;
 }
 export interface AlertMethods{
   render(isOutputMode: boolean, slotRender: SlotRender):VElement,
   toJSON():any,
   createControlView():void
 }
-export const alertComponent = defineComponent<AlertMethods, AlertState, AlertState>({
+export const alertComponent = defineComponent<AlertMethods, AlertState>({
   type: ContentType.BlockComponent,
   name: 'AlertComponent',
-  transform(translator: Translator, state: AlertState): AlertState {
-    return {
-      ...state,
-      //slot:translator.createSlot(state.slot)
-    }
-  },
-  setup(initState: AlertState): AlertMethods {
+  setup(data: ComponentData<AlertState>): AlertMethods {
     const injector = useContext();
     const translator=injector.get(Translator);
-    const slots = useSlots([
-      translator.createSlot(initState.slot) ||new Slot([
-        ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent
-      ])
-    ], () => {
-      return new Slot([
-        ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent
-      ])
-    })
-    const changeController=useState(initState);
-    //useState({fill:false,type:'info',slot:slots.toJSON()})
-    changeController.onChange.subscribe(state=>{
-      initState=state;
+    const slots = useSlots(data.slots || [new Slot([ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent])]
+    )
+    let state=data.state as AlertState;
+    const changeController=useState(state);
+
+    changeController.onChange.subscribe(newState=>{
+      state=newState;
       console.log('changeController',state)
     })
 
     return {
       render(isOutputMode: boolean, slotRender: SlotRender): VElement {
         let classes='tb-alert';
-        if (initState.fill) {
+        if (state.fill) {
           classes+=' tb-alert-fill';
         }
-        if (initState.type) {
-          classes+=(' tb-alert-' + initState.type);
+        if (state.type) {
+          classes+=(' tb-alert-' + state.type);
         }
         console.log(classes)
         const vNode=VElement.createElement('div',{
@@ -89,8 +74,8 @@ export const alertComponent = defineComponent<AlertMethods, AlertState, AlertSta
       },
       toJSON(): any {
         return {
-          fill: initState.fill,
-          type:initState.type,
+          fill: state.fill,
+          type:state.type,
           slot:slots.get(0)!.toJSON()
         }
       },
@@ -106,19 +91,19 @@ export const alertComponent = defineComponent<AlertMethods, AlertState, AlertSta
                 return {
                   label: i,
                   value: i,
-                  selected: i === initState.type
+                  selected: i === state.type
                 };
               })
             }),
             new FormSwitch({
               label: '是否填充',
               name: 'fill',
-              checked: initState.fill
+              checked: state.fill
             })
           ]
         });
         form.onComplete.subscribe(map => {
-          console.log('component',initState)
+          console.log('component',state)
           changeController.update(draft=>{
             draft.fill=map.get('fill');
             draft.type=map.get('type');
@@ -160,11 +145,10 @@ export const alertComponentLoader: ComponentLoader = {
     slotParser(slot, element.children[1]! as HTMLElement)
     const alertState:AlertState={
       fill: element.className.includes('tb-alert-fill'),
-      type:type,
-      slot:slot.toJSON()
+      type:type,     
     }
     console.log('read',alertState)
-    return alertComponent.createInstance(context, alertState)
+    return alertComponent.createInstance(context, {slots:[slot],state:alertState})
   },
   resources: {
     styles: [`
@@ -269,9 +253,8 @@ export const alertComponentCreator:ComponentCreator={
     const alertState:AlertState={
       fill: true,
       type:'primary',
-      slot:slot.toJSON()
     }
-    const component = alertComponent.createInstance(injector, alertState);
+    const component = alertComponent.createInstance(injector, {slots:[slot],state:alertState});
 
     commander.insert(component)
     selection.setLocation(slot, 0)

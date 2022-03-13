@@ -4,7 +4,7 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, ComponentData
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -18,7 +18,6 @@ export interface katexState{
 }
 export interface katexMethods{
     render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    toJSON():any,
     createControlView():void
 }
 function domToVDom(el:Element) {
@@ -33,18 +32,14 @@ function domToVDom(el:Element) {
         return child.textContent;
     }));
 }
-const SetComponentOptions=function(block:boolean):ComponentOptions<katexMethods,katexState,katexState>{
-    const katexComponentOptions:ComponentOptions<katexMethods,katexState,katexState>={
+const SetComponentOptions=function(block:boolean):ComponentOptions<katexMethods,katexState>{
+    const katexComponentOptions:ComponentOptions<katexMethods,katexState>={
         name: block?"katexBlockComponent":"katexInlineComponent",
         type: block?ContentType.BlockComponent:ContentType.InlineComponent,
-        transform(translator: Translator, state: katexState): katexState {
-            return state;
-        },
-        setup(state: katexState): katexMethods {
+        setup(data: ComponentData<katexState> ): katexMethods {
             const injector = useContext();
             const controlPanel=injector.get(UIControlPanel)
-            const translator=injector.get(Translator);
-            const selection = injector.get(Selection)
+            let state=data.state as katexState;
             const changeController=useState(state);
             //useState({fill:false,type:'info',slot:slots.toJSON()})
             changeController.onChange.subscribe(newState=>{
@@ -90,10 +85,7 @@ const SetComponentOptions=function(block:boolean):ComponentOptions<katexMethods,
                     return el;
     
                 },
-    
-                toJSON(){
-                    return state
-                },
+
                 createControlView(){
                     console.log('create',state)
                     const form = new Form({
@@ -145,9 +137,9 @@ export const katexInlineComponentLoader:ComponentLoader={
             //block:element.style.display==='block'
         }
         if(element.className === 'tb-katex-block'){
-            return katexBlockComponent.createInstance(context,state);
+            return katexBlockComponent.createInstance(context,{state:state});
         }else{
-            return katexInlineComponent.createInstance(context,state);
+            return katexInlineComponent.createInstance(context,{state:state});
         }
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
         

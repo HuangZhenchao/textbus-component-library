@@ -10,7 +10,8 @@ import {
     Translator,
     useContext,
     useSlots, useState,
-    VElement
+    VElement,
+    ComponentData
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -18,28 +19,18 @@ import {Injector} from "@tanbo/di";
 export interface todoListState{
     active:boolean,
     disabled:boolean,
-    slotLiteral:SlotLiteral
 }
-export const todoListComponent=defineComponent<ComponentMethods,todoListState,todoListState>({
+export const todoListComponent=defineComponent<ComponentMethods,todoListState>({
     name: "todoListComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: todoListState): todoListState {
-        return state;
-    },
-    setup(state: todoListState): ComponentMethods {
+
+    setup(data: ComponentData<todoListState>): ComponentMethods {
         const injector = useContext();
-        const translator=injector.get(Translator);
-        const slots = useSlots([
-            translator.createSlot(state.slotLiteral) ||new Slot([
+        const slots = useSlots(data.slots ||[new Slot([
                 ContentType.BlockComponent,
                 ContentType.Text
             ])
-        ], () => {
-            return new Slot([
-                ContentType.BlockComponent,
-                ContentType.Text
-            ])
-        })
+        ])
         const stateCollection = [{
             active: false,
             disabled: false
@@ -53,6 +44,7 @@ export const todoListComponent=defineComponent<ComponentMethods,todoListState,to
             active: true,
             disabled: true
         }];
+        let state=data.state as todoListState
         const changeController=useState(state);
         //useState({fill:false,type:'info',slot:slots.toJSON()})
         changeController.onChange.subscribe(newState=>{
@@ -89,12 +81,10 @@ export const todoListComponent=defineComponent<ComponentMethods,todoListState,to
                                     //state=
                                     const i = (getStateIndex(state.active, state.disabled) + 1) % 4;
                                     const newState = stateCollection[i];
-                                        changeController.update(()=>{
-                                            return {
-                                            active:newState.active,
-                                            disabled:newState.disabled,
-                                            slotLiteral:state.slotLiteral
-                                        }});
+                                        changeController.update(draft=>{                                           
+                                            draft.active=newState.active;
+                                            draft.disabled=newState.disabled;
+                                        });
                                         console.log(state)
                                     //state.markAsDirtied();
                                 } })
@@ -109,12 +99,7 @@ export const todoListComponent=defineComponent<ComponentMethods,todoListState,to
                     </div>
                 )
 
-            },
-
-            toJSON(){
-                return state
             }
-
         }
     }
 
@@ -134,11 +119,10 @@ export const todoListComponentLoader:ComponentLoader={
         const state:todoListState={
             active:check.className.includes('tb-todo-list-state-active'),
             disabled:check.className.includes('tb-todo-list-state-disabled'),
-            slotLiteral:slot.toJSON()
         }
 
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
-        return todoListComponent.createInstance(context,state);
+        return todoListComponent.createInstance(context,{state:state,slots:[slot]});
     },
     resources: {
         styles: [

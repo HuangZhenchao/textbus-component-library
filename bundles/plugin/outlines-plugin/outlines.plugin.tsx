@@ -5,7 +5,6 @@ import {createElement, createTextNode, Plugin} from "@textbus/browser";
 import {Renderer, RootComponentRef, VElement} from "@textbus/core";
 
 import './outlines.css'
-import {LayoutPlugin} from "../layout.plugin";
 export class OutlinesPlugin implements Plugin{
     private renderer: any;
     private rootComponentRef: any;
@@ -22,7 +21,7 @@ export class OutlinesPlugin implements Plugin{
     private readonly boolDefaultExpand: boolean=false;
 
     private subs: any;
-    private layoutPlugin: any;
+    leftContainer: HTMLElement;
 
     constructor(){
         this.subs = [];
@@ -60,13 +59,15 @@ export class OutlinesPlugin implements Plugin{
                 })
             ]
         });
-
+        this.leftContainer = createElement('div', {
+            classes: ['textbus-ui-left']
+        })
         //this.btnWrapper.style.float='right';
     }
     setup(injector){
 
         this.layout=injector.get(Layout);
-        this.layoutPlugin=injector.get(LayoutPlugin);
+        this.layout.container.parentNode.prepend(this.leftContainer);
         this.renderer=injector.get(Renderer);
         this.scroller=this.layout.scroller
         this.rootComponentRef = injector.get(RootComponentRef);
@@ -76,7 +77,7 @@ export class OutlinesPlugin implements Plugin{
         //this.container.style.width=this.layout.container.clientWidth*0.3+'px';
         //this.container.style.height=this.layout.container.clientHeight+'px'
 
-        this.layoutPlugin.leftContainer.appendChild(this.container);
+        this.leftContainer.appendChild(this.container);
 
 
         this.layout.bottom.appendChild(this.btnWrapper);
@@ -162,7 +163,7 @@ export class OutlinesPlugin implements Plugin{
             if (component.name=='HeadingComponent') {
                 result.push(component);
             }
-            component.slots.slots.forEach(slot => {
+            component.slots.toArray().forEach(slot => {
                 slot.content.data.forEach(childComponent=>{
                     if (typeof childComponent === 'string') {
                         return;

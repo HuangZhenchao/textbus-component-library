@@ -1,4 +1,5 @@
 import {
+    ComponentData,
     ComponentInstance,
     ComponentMethods,
     ContentType,
@@ -29,44 +30,26 @@ export class WordExplainDetailSlot extends Slot{
         this.write('<div>描述</div>')
     }
 }
-export interface wordExplainInfo{
-    width:string
-}
+
 export interface wordExplainState{
     width:string,
-    titleSlot:WordExplainTitleSlot,
+    
+}
+/**
+ * titleSlot:WordExplainTitleSlot,
     subtitleSlot:WordExplainSubtitleSlot,
     detailSlot:WordExplainDetailSlot,
-}
-export interface wordExplainSlotLiteral{
-    width:string,
-    titleSlotLiteral:SlotLiteral,
-    subtitleSlotLiteral:SlotLiteral,
-    detailSlotLiteral:SlotLiteral,
-}
-export const wordExplainComponent=defineComponent<ComponentMethods,wordExplainSlotLiteral,wordExplainState>({
+ */
+export const wordExplainComponent=defineComponent<ComponentMethods,wordExplainState>({
     name: "wordExplainComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, slotLiteral: wordExplainSlotLiteral): wordExplainState {
-        return {
-            width:slotLiteral.width,
-            titleSlot:translator.createSlot(slotLiteral.titleSlotLiteral),
-            subtitleSlot:translator.createSlot(slotLiteral.subtitleSlotLiteral),
-            detailSlot:translator.createSlot(slotLiteral.detailSlotLiteral),
-        }
-    },
-    setup(initState: wordExplainState): ComponentMethods {
+
+    setup(data: ComponentData<wordExplainState>): ComponentMethods {
         const injector = useContext();
         const translator=injector.get(Translator);
 
-        let state=initState
-        let slots=useSlots([
-            initState.titleSlot,
-            initState.subtitleSlot,
-            initState.detailSlot
-        ],(state)=>{
-            return translator.createSlot(state)
-        })
+        let state=data.state as wordExplainState
+        let slots=useSlots(data.slots!)
         const changeController=useState(state);
         changeController.onChange.subscribe(newState=>{
             state=newState;
@@ -75,11 +58,11 @@ export const wordExplainComponent=defineComponent<ComponentMethods,wordExplainSl
         return {
             render(isOutputMode:boolean, slotRender:SlotRender){
                 return (VElement.createElement("div", {class:'tb-word-explain'},
-                    VElement.createElement("div", { class: "tb-word-explain-title-group", style: { width: initState.width } },
-                        slotRender(initState.titleSlot, ()=>{return VElement.createElement("div", { class: "tb-word-explain-title" })}),
-                        slotRender(initState.subtitleSlot, ()=>{return VElement.createElement("div", { class: "tb-word-explain-subtitle" })})
+                    VElement.createElement("div", { class: "tb-word-explain-title-group", style: { width: state!.width } },
+                        slotRender(slots.get(0)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-title" })}),
+                        slotRender(slots.get(1)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-subtitle" })})
                     ),
-                        slotRender(initState.detailSlot, ()=>{return VElement.createElement("div", { class: "tb-word-explain-detail" })}),
+                        slotRender(slots.get(2)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-detail" })}),
                     !isOutputMode && VElement.createElement("span", { class: "tb-word-explain-close", onClick: () => {
                             const instance = slots.get(0)?.parent as ComponentInstance;
                             const pSlot = instance?.parent;
@@ -90,15 +73,6 @@ export const wordExplainComponent=defineComponent<ComponentMethods,wordExplainSl
                 );
 
             },
-
-            toJSON(){
-                return {
-                    width:state.width,
-                    titleSlotLiteral:slots.get(0)?.toJSON(),
-                    subtitleSlotLiteral:slots.get(1)?.toJSON(),
-                    detailSlotLiteral:slots.get(2)?.toJSON(),
-                }
-            }
 
         }
     }
@@ -111,15 +85,15 @@ export const wordExplainComponentLoader:ComponentLoader={
         return element.tagName.toLowerCase() === 'div' && element.className === 'tb-word-explain'
     },
     read(element: HTMLElement, context: Injector, slotParser: SlotParser) :ComponentInstance{
+        let slots=[slotParser(new WordExplainTitleSlot(),element.querySelector('.tb-word-explain-title') as HTMLElement),
+        slotParser(new WordExplainSubtitleSlot(),element.querySelector('.tb-word-explain-subtitle') as HTMLElement),
+        slotParser(new WordExplainDetailSlot(),element.querySelector('.tb-word-explain-detail') as HTMLElement)]
         let initState:wordExplainState={
             width:'200px',
-            titleSlot:slotParser(new WordExplainTitleSlot(),element.querySelector('.tb-word-explain-title') as HTMLElement),
-            subtitleSlot:slotParser(new WordExplainSubtitleSlot(),element.querySelector('.tb-word-explain-subtitle') as HTMLElement),
-            detailSlot:slotParser(new WordExplainDetailSlot(),element.querySelector('.tb-word-explain-detail') as HTMLElement)
         }
 
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
-        return wordExplainComponent.createInstance(context,initState);
+        return wordExplainComponent.createInstance(context,{slots:slots,state:initState});
     },
     resources: {
         styles: [

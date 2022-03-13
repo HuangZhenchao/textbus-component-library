@@ -1,9 +1,7 @@
-import {blockquoteToolConfigFactory, ButtonTool,ButtonToolConfig} from '@textbus/editor'
-import { Commander, ContentType, Slot, Selection, Query, QueryStateType } from '@textbus/core'
-import { imageCardComponent } from './imageCard.component'
+import { Commander, Query, QueryStateType } from '@textbus/core';
 import { createElement, createTextNode } from '@textbus/browser';
 import {DialogTool, FileUploader, Form, FormRadio, FormTextField, I18n, imageComponent} from "@textbus/editor";
-
+import {MyFileUploader} from "./fileUploader"
 class MarginSetter {
     name: string;
     private inputs: any[];
@@ -45,6 +43,7 @@ class MarginSetter {
     update(value) {
         this.reset();
         if (value) {
+            
             const vars = (value + '').split(/\s+/g);
             vars.forEach((v, index) => {
                 this.inputs[index].value = v;
@@ -127,7 +126,7 @@ class SizeSetter {
         return true;
     }
 }
-export function imageCardToolConfigFactory(injector) {
+export function imagesToolConfigFactory(injector) {
     const i18n = injector.get(I18n);
     const query = injector.get(Query);
     const commander = injector.get(Commander);
@@ -147,7 +146,7 @@ export function imageCardToolConfigFactory(injector) {
                 uploadType: 'image',
                 uploadBtnText: childI18n.get('uploadBtnText'),
                 uploadMultiple: true,
-                fileUploader,
+                fileUploader:new MyFileUploader(),
                 validateFn(value) {
                     if (!value) {
                         return childI18n.get('validateErrorMessage');
@@ -177,7 +176,7 @@ export function imageCardToolConfigFactory(injector) {
     });
     return {
         iconClasses: ['textbus-icon-image'],
-        label:'图文卡片',
+        label:'图片批量',
         tooltip: i18n.get('plugins.toolbar.imageTool.tooltip'),
         viewController: form,
         queryState() {
@@ -204,9 +203,6 @@ export function imageCardToolConfigFactory(injector) {
         useValue(formValue) {
             if (formValue) {
                 formValue.get('src').split(';').forEach(src=>{
-                    const slot = new Slot([
-                        ContentType.Text
-                    ])
                     let value = {
                         src: src,
                         margin: formValue.get('margin'),
@@ -216,12 +212,12 @@ export function imageCardToolConfigFactory(injector) {
                         width: formValue.get('size').width,
                         height: formValue.get('size').height
                     };
-                    const state = query.queryWrappedComponent(imageCardComponent);
+                    const state = query.queryWrappedComponent(imageComponent);
                     if (state.state === QueryStateType.Enabled) {
                         state.value.useState(value);
                     }
                     else if (value === void 0 ? void 0 : value.src) {
-                        commander.insert(imageCardComponent.createInstance(injector, {slots:[slot],state:value}));
+                        commander.insert(imageComponent.createInstance(injector, value));
                     }
                 })
             }
@@ -229,6 +225,5 @@ export function imageCardToolConfigFactory(injector) {
         }
     };
 }
-export const imageCardTool = new DialogTool(imageCardToolConfigFactory);
-
-
+export const imagesTool = new DialogTool(imagesToolConfigFactory);
+//# sourceMappingURL=image.tool.js.map

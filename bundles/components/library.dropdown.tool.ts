@@ -130,6 +130,6 @@ export function libraryToolConfigFactory(injector):DropdownToolConfig {
     };
 
 }
-export function libraryTool(){
+export function libraryDropdownTool(){
     return new DropdownTool(libraryToolConfigFactory);
 }

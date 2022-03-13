@@ -1,4 +1,5 @@
 import {
+    ComponentData,
     ComponentInstance,
     ComponentMethods,
     ContentType,
@@ -33,28 +34,20 @@ export interface timelineSlotLiteral{
 const timelineTypes = ['primary', 'info', 'success', 'warning', 'danger', 'dark', 'gray'];
 const colors = ['#1296db', '#6ad1ec', '#15bd9a', '#ff9900', '#E74F5E', '#495060', '#bbbec4'];
 
-export const timelineComponent=defineComponent<ComponentMethods,timelineSlotLiteral,timelineSlot>({
+export const timelineComponent=defineComponent<ComponentMethods,null>({
     name: "timelineComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: timelineSlotLiteral): timelineSlot {
-        return {
-            itemSlots:state.itemSlotLiterals.map((item)=>{
-                return translator.createSlot(item)
-            })}
-    },
-    setup(initState: timelineSlot): ComponentMethods {
-        const injector = useContext();
-        const translator=injector.get(Translator);
-        const slots = useSlots(initState.itemSlots || [ new TimelineItemSlot('primary')], () => {
-            return new TimelineItemSlot('primary')
-        })
+
+    setup(data: ComponentData<null>): ComponentMethods {
+
+        const slots = useSlots(data.slots || [ new TimelineItemSlot('primary')], )
         //slots.get(0).state.type=''
-        let info={count:1}
-        const changeController=useState(info);
+        let state={}
+        const changeController=useState(state);
         //useState({fill:false,type:'info',slot:slots.toJSON()})
         changeController.onChange.subscribe(newState=>{
-            info=newState;
-            console.log('changeController',info)
+            state=newState;
+            console.log('changeController',state)
         })
         return {
             render(isOutputMode:boolean, slotRender:SlotRender){
@@ -97,13 +90,6 @@ export const timelineComponent=defineComponent<ComponentMethods,timelineSlotLite
                 },items);
 
             },
-
-            toJSON(){
-                return {itemSlotLiterals:slots.toArray().map(slot=>{
-                        return slot.toJSON()
-                    })}
-            }
-
         }
     }
 
@@ -117,15 +103,11 @@ export const timelineComponentLoader:ComponentLoader={
     read(element: HTMLElement, context: Injector, slotParser: SlotParser) :ComponentInstance{
         //const check=element.querySelector('.tb-todo-list-state') as HTMLElement
         const content=element.querySelector('.tb-timeline-content') as HTMLElement
-        const slot=new Slot<any>([ContentType.BlockComponent,ContentType.Text])
+        const slot=new TimelineItemSlot('primary')
         slotParser(slot,content)
 
-        let state:timelineSlot={
-            itemSlots:[new TimelineItemSlot('primary')]
-        }
-
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
-        return timelineComponent.createInstance(context,state);
+        return timelineComponent.createInstance(context,{slots:[slot]});
     },
     resources: {
         styles: [

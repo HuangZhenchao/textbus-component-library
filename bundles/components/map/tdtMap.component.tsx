@@ -4,7 +4,7 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode, ComponentData
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -24,16 +24,11 @@ export interface tdtMapState{
     zoom:any
 }
 
-export const tdtMapComponent=defineComponent({
+export const tdtMapComponent=defineComponent<ComponentMethods,tdtMapState>({
     name: "tdtMapComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: tdtMapState): tdtMapState {
-        return state;
-    },
-    setup(state: tdtMapState): tdtMapMethods {
-        const injector = useContext();        
-        const controlPanel=injector.get(UIControlPanel)
-        const fileUploader = injector.get(FileUploader);
+    setup(data: ComponentData<tdtMapState> ): tdtMapMethods {
+        let state=data.state as tdtMapState
         const changeController=useState(state);
 
         //useState({fill:false,type:'info',slot:slots.toJSON()})
@@ -136,7 +131,7 @@ export const tdtMapComponentLoader:ComponentLoader={
             zoom:16
         }
         //slotParser(state.slot,element)
-        return tdtMapComponent.createInstance(context,state);
+        return tdtMapComponent.createInstance(context,{state:state});
         
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
         

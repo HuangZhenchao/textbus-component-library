@@ -16,9 +16,8 @@ export function alertToolConfigFactory(injector):ButtonToolConfig {
       const alertState:AlertState={
         fill: true,
         type:'primary',
-        slot:slot.toJSON()
       }
-      const component = alertComponent.createInstance(injector, alertState)
+      const component = alertComponent.createInstance(injector, {slots:[slot],state:alertState})
       commander.insert(component)
       selection.setLocation(slot, 0)
     }

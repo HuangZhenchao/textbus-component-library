@@ -4,7 +4,7 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, ComponentData
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -21,38 +21,26 @@ export interface jumbotronState{
     backgroundImage: string;
     backgroundSize: string;
     backgroundPosition: string;
-    slot:JumbotronSlot;
 }
-export interface jumbotronSLotLiteral{
-    minHeight: string;
-    backgroundImage: string;
-    backgroundSize: string;
-    backgroundPosition: string;
-    slotLiteral:SlotLiteral;
-}
+
 export interface jumbotronMethods{
     render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    toJSON():any,
     createControlView():void
 }
-export const jumbotronComponent=defineComponent({
+export const jumbotronComponent=defineComponent<jumbotronMethods,jumbotronState>({
     name: "jumbotronComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: jumbotronSLotLiteral): jumbotronState {
-        return {
-            ...state,
-            slot:translator.createSlot(state.slotLiteral)
-        };
-    },
-    setup(state: jumbotronState): jumbotronMethods {
+
+    setup(data: ComponentData<jumbotronState>): jumbotronMethods {
         const injector = useContext();        
         const controlPanel=injector.get(UIControlPanel)
         const fileUploader = injector.get(FileUploader);
-        const changeController=useState(state);
+        
         const slots=useSlots(
-            [state.slot ||new JumbotronSlot()], 
-            () => {return new JumbotronSlot()}
+            data.slots ||[new JumbotronSlot()],             
         )
+        let state=data.state as jumbotronState
+        const changeController=useState(state);
         //useState({fill:false,type:'info',slot:slots.toJSON()})
         changeController.onChange.subscribe(newState=>{
             state=newState;
@@ -77,10 +65,6 @@ export const jumbotronComponent=defineComponent({
                  }
                 );
                 return slotRender(slots.get(0)!, ()=>{return vEle});
-            },
-
-            toJSON(){
-                return state
             },
             createControlView(){
                 const form = new Form({
@@ -141,10 +125,11 @@ export const jumbotronComponentLoader:ComponentLoader={
             backgroundSize: style.backgroundSize,
             backgroundPosition: style.backgroundPosition,
             minHeight: style.minHeight,
-            slot:new JumbotronSlot()
+            
         }
-        slotParser(state.slot,element)
-        return jumbotronComponent.createInstance(context,state);
+        let slot=new JumbotronSlot()
+        slotParser(slot,element)
+        return jumbotronComponent.createInstance(context,{slots:[slot],state:state});
         
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
         

@@ -1,4 +1,5 @@
 import {
+  ComponentData,
     ComponentInstance,
     ComponentMethods,
     ContentType,
@@ -19,21 +20,18 @@ const colors = {
     dark: '#495060',
     gray: '#bbbec4'
 };
-export interface ProgressConfig {
+export interface ProgressState {
     type:string ,//|'primary' | 'info' | 'success' | 'warning' | 'danger' | 'gray' | 'dark';
     progress: number,
     max: number,
     min: number
 }
-export const progressComponent=defineComponent<ComponentMethods,ProgressConfig,ProgressConfig>({
+export const progressComponent=defineComponent<ComponentMethods,ProgressState>({
     name: "progressComponent",
     type: ContentType.BlockComponent,
-    transform(translator: Translator, state: ProgressConfig): ProgressConfig {
-        return state;
-    },
-    setup(state: ProgressConfig): ComponentMethods {
+    setup(data: ComponentData<ProgressState>): ComponentMethods {
         const injector = useContext();
-
+        let state=data.state as ProgressState;
         const changeController=useState(state);
         //useState({fill:false,type:'info',slot:slots.toJSON()})
         changeController.onChange.subscribe(newState=>{
@@ -52,11 +50,6 @@ export const progressComponent=defineComponent<ComponentMethods,ProgressConfig,P
                 return el
 
             },
-
-            toJSON(){
-                return state
-            }
-
         }
     }
 
@@ -69,7 +62,7 @@ export const progressComponentLoader:ComponentLoader={
     },
     read(element: HTMLElement, context: Injector, slotParser: SlotParser) :ComponentInstance{
 
-        const state:ProgressConfig={
+        const state:ProgressState={
             type: element.getAttribute('type')||"primary",
             progress: Number(element.getAttribute('progress')) || 0,
             max: Number(element.getAttribute('max')) || 100,
@@ -77,7 +70,7 @@ export const progressComponentLoader:ComponentLoader={
         }
 
         //const component = new TodoListComponent(listConfig.map(i => i.slot));
-        return progressComponent.createInstance(context,state);
+        return progressComponent.createInstance(context,{state:state});
     },
     resources: {
         styles: [

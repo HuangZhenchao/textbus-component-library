@@ -1,7 +1,6 @@
 import {createElement, EDITABLE_DOCUMENT} from "@textbus/browser";
 import {EditorController, Layout} from "@textbus/editor";
 import {Tab} from "../utils/tab";
-import {LayoutPlugin} from "../plugin/layout.plugin";
 import {Selection} from "@textbus/core";
 
 import { fromEvent } from "rxjs";
@@ -16,11 +15,11 @@ export class UIControlPanel {
 
     private fixedBtn: HTMLElement;
     private editorController: any;
-    private layoutPlugin: any;
     private selection: any;
     private container: HTMLElement;
     disBtn: HTMLElement;
     prevComponent: any;
+    rightContainer: HTMLElement;
 
     constructor() {
         this._fixed = false;
@@ -58,7 +57,9 @@ export class UIControlPanel {
                 })
             ]
         });
-
+        this.rightContainer = createElement('div', {
+            classes: ['textbus-ui-right']
+        })
         this.fixedBtn.addEventListener('click', () => {
             this.fixed = !this.fixed;
         });
@@ -70,7 +71,7 @@ export class UIControlPanel {
     }
     setup(injector){
         this.layout = injector.get(Layout);
-        this.layoutPlugin=injector.get(LayoutPlugin);
+        this.layout.container.parentNode.appendChild(this.rightContainer);
         this.editorController = injector.get(EditorController);
         this.selection=injector.get(Selection);
         const editableDocument = injector.get(EDITABLE_DOCUMENT);
@@ -93,13 +94,12 @@ export class UIControlPanel {
     set fixed(b) {
         this._fixed = b;
         if (b) {
-            this.layout.container.parentNode.insertBefore(this.elementRef, this.layoutPlugin.rightContainer);
+            this.layout.container.parentNode.insertBefore(this.elementRef, this.rightContainer);
             this.elementRef.classList.add('textbus-control-panel-fixed');
             this.fixedBtn.classList.add('textbus-control-panel-fixed-btn-active');
             this.fixedBtn.title = '取消固定';
         }
         else {
-            //this.layoutPlugin.rightShow(this.elementRef);
             this.layout.middle.appendChild(this.elementRef);
             this.elementRef.classList.remove('textbus-control-panel-fixed');
             this.fixedBtn.classList.remove('textbus-control-panel-fixed-btn-active');
@@ -118,11 +118,9 @@ export class UIControlPanel {
         if (views.length === 0) {
             //component
             this.tab.show([]);
-            //this.layoutPlugin.rightDisplay(this.elementRef);
             this.elementRef.classList.remove('textbus-control-panel-show');
             return;
         }
-        //this.layoutPlugin.rightShow(this.elementRef);
         this.elementRef.classList.add('textbus-control-panel-show');
         const tabs = views.map(view => {
             return {

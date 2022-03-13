@@ -18,9 +18,9 @@ export function todoListToolConfigFactory(injector):ButtonToolConfig {
             const state:todoListState={
                 active: false,
                 disabled:false,
-                slotLiteral:slot.toJSON()
+                
             }
-            const component = todoListComponent.createInstance(injector, state)
+            const component = todoListComponent.createInstance(injector, {state:state,slots:[slot]})
             commander.insert(component)
             selection.setLocation(slot, 0)
         }

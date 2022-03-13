@@ -15,7 +15,7 @@ export function tdtMapToolConfigFactory(injector):ButtonToolConfig {
                 zoom:16
             }
             
-            const component = tdtMapComponent.createInstance(injector, state)
+            const component = tdtMapComponent.createInstance(injector, {state:state})
             commander.insert(component)
             //selection.setLocation(headingSlot, headingSlot.length)
         }

@@ -14,15 +14,13 @@ export function wordExplainToolConfigFactory(injector):ButtonToolConfig {
         label: '插入 wordExplain 组件',
         tooltip:'插入 wordExplain 组件',
         onClick() {
+            let initSlots=[new WordExplainTitleSlot(),new WordExplainSubtitleSlot(),new WordExplainDetailSlot()]
             let initState:wordExplainState={
                 width:'200px',
-                titleSlot:new WordExplainTitleSlot(),
-                subtitleSlot:new WordExplainSubtitleSlot(),
-                detailSlot:new WordExplainDetailSlot()
             }
-            const component = wordExplainComponent.createInstance(injector, initState)
+            const component = wordExplainComponent.createInstance(injector, {slots:initSlots,state:initState})
             commander.insert(component)
-            selection.setLocation(initState.detailSlot, 0)
+            selection.setLocation(initSlots[0], 0)
         }
     }
 }
