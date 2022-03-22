@@ -6,8 +6,8 @@ export function katexInlineToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 katexInline 组件',
-        tooltip:'插入 katexInline 组件',
+        label: '行内数学公式',
+        tooltip:'行内数学公式',
         onClick() {
             const state:katexState={
                 //block:false,
@@ -16,7 +16,7 @@ export function katexInlineToolConfigFactory(injector):ButtonToolConfig {
             }
             const component = katexInlineComponent.createInstance(injector, {state:state})
             commander.insert(component)
-            //selection.setLocation(slot, 0)
+            //selection.setPosition(slot, 0)
         }
     }
 }
@@ -24,8 +24,8 @@ export function katexBlockToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 katexBlock 组件',
-        tooltip:'插入 katexBlock 组件',
+        label: '块级数学公式',
+        tooltip:'块级数学公式',
         onClick() {
             const state:katexState={
                 //block:false,
@@ -34,7 +34,7 @@ export function katexBlockToolConfigFactory(injector):ButtonToolConfig {
             }
             const component = katexBlockComponent.createInstance(injector, {state:state})
             commander.insert(component)
-            //selection.setLocation(slot, 0)
+            //selection.setPosition(slot, 0)
         }
     }
 }

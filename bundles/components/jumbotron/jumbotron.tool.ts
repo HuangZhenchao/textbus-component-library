@@ -6,8 +6,8 @@ export function jumbotronToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 jumbotron 组件',
-        tooltip:'插入 jumbotron 组件',
+        label: '巨幕',
+        tooltip:'巨幕',
         onClick() {
             const state:jumbotronState={
                 backgroundPosition: 'center center',
@@ -23,7 +23,7 @@ export function jumbotronToolConfigFactory(injector):ButtonToolConfig {
             slot.write(headingComponent.createInstance(injector,{state:'h1',slots:[headingSlot]}))
             const component = jumbotronComponent.createInstance(injector, {slots:[slot],state:state})
             commander.insert(component)
-            selection.setLocation(headingSlot, headingSlot.length)
+            selection.setPosition(headingSlot, headingSlot.length)
         }
     }
 }

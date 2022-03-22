@@ -3,7 +3,7 @@ import {
     ComponentInstance,
     ComponentMethods,
     ContentType,
-    defineComponent, Ref,
+    defineComponent, onEnter, Ref,
     Slot,
     SlotLiteral,
     SlotRender,
@@ -46,6 +46,9 @@ export const imageCardComponent = defineComponent<ComponentMethods, imageCardSta
             changeController.update(()=>{return Object.assign(Object.assign({}, state), rect)});
             //TODO:改为调整整个卡片而不是图片
         });
+        onEnter(ev=>{
+            ev.preventDefault()
+        })
         return {
             render(isOutputMode: boolean, slotRender: SlotRender): VElement {
                 console.log(state)

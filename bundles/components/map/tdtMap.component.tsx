@@ -9,13 +9,7 @@ import {
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
 import { FileUploader, Form, FormSelect, FormSwitch, FormTextarea, FormTextField, headingComponent } from "@textbus/editor";
-import { UIControlPanel } from "../control-panel.plugin";
 
-export interface tdtMapMethods{
-    render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    toJSON():any,
-    createControlView():void
-}
 const ak='85dcab3699b288cd780476d37fa35805'
 declare const window: any;
 export interface tdtMapState{
@@ -27,7 +21,7 @@ export interface tdtMapState{
 export const tdtMapComponent=defineComponent<ComponentMethods,tdtMapState>({
     name: "tdtMapComponent",
     type: ContentType.BlockComponent,
-    setup(data: ComponentData<tdtMapState> ): tdtMapMethods {
+    setup(data: ComponentData<tdtMapState> ): ComponentMethods {
         let state=data.state as tdtMapState
         const changeController=useState(state);
 
@@ -65,51 +59,6 @@ export const tdtMapComponent=defineComponent<ComponentMethods,tdtMapState>({
                 //map.centerAndZoom(point, 15);
 
                 return vEle;
-            },
-
-            toJSON(){
-                return state
-            },
-            createControlView(){
-                /*
-                const form = new Form({
-                    mini: true,
-                    confirmBtnText: '确定',
-                    items: [
-                        new FormTextField({
-                            name: 'minHeight',
-                            value: state.minHeight,
-                            placeholder: '',
-                            label: '巨幕最小高度'
-                        }),
-                        new FormTextField({
-                            label: '背景图片地址',
-                            name: 'backgroundImage',
-                            placeholder: '',
-                            canUpload: true,
-                            uploadType: 'image',
-                            uploadBtnText: '上传',
-                            value: state.backgroundImage,
-                            fileUploader,
-                            validateFn(value) {
-                                if (!value) {
-                                    return 'test';
-                                }
-                                return false;
-                            }
-                        })
-                    ]
-                });
-                form.onComplete.subscribe(map => {
-                    changeController.update(draft=>{
-                        draft.minHeight = map.get('minHeight');
-                        draft.backgroundImage = map.get('backgroundImage');
-                    })
-                });
-                return {
-                    title: '巨幕设置',
-                    view: form.elementRef
-                };*/
             }
 
         }

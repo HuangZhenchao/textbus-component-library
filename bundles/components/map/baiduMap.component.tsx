@@ -9,12 +9,9 @@ import {
 import {ComponentLoader, EDITABLE_DOCUMENT, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
 import { FileUploader, Form, FormSelect, FormSwitch, FormTextarea, FormTextField, headingComponent } from "@textbus/editor";
-import { UIControlPanel } from "../control-panel.plugin";
+
 let index=1;
-export interface baiduMapMethods{
-    render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    createControlView():void
-}
+
 const ak='aRsXEo3UFgKwRF6UGZCbNno5rTwlz2zH'
 declare const window: any;
 declare const BMapGL: any;
@@ -24,12 +21,12 @@ export interface baiduMapState{
     zoom:any
 }
 
-export const baiduMapComponent=defineComponent<baiduMapMethods,baiduMapState>({
+export const baiduMapComponent=defineComponent<ComponentMethods,baiduMapState>({
     name: "baiduMapComponent",
     type: ContentType.BlockComponent,
-    setup(data: ComponentData<baiduMapState>): baiduMapMethods {
+    setup(data: ComponentData<baiduMapState>): ComponentMethods {
         const injector = useContext();        
-        const controlPanel=injector.get(UIControlPanel)
+
         const fileUploader = injector.get(FileUploader);
         const doc = injector.get(EDITABLE_DOCUMENT);
         let state=data.state as baiduMapState;
@@ -72,48 +69,6 @@ export const baiduMapComponent=defineComponent<baiduMapMethods,baiduMapState>({
 
                 return vEle;
 
-            },
-
-            createControlView(){
-                /*
-                const form = new Form({
-                    mini: true,
-                    confirmBtnText: '确定',
-                    items: [
-                        new FormTextField({
-                            name: 'minHeight',
-                            value: state.minHeight,
-                            placeholder: '',
-                            label: '巨幕最小高度'
-                        }),
-                        new FormTextField({
-                            label: '背景图片地址',
-                            name: 'backgroundImage',
-                            placeholder: '',
-                            canUpload: true,
-                            uploadType: 'image',
-                            uploadBtnText: '上传',
-                            value: state.backgroundImage,
-                            fileUploader,
-                            validateFn(value) {
-                                if (!value) {
-                                    return 'test';
-                                }
-                                return false;
-                            }
-                        })
-                    ]
-                });
-                form.onComplete.subscribe(map => {
-                    changeController.update(draft=>{
-                        draft.minHeight = map.get('minHeight');
-                        draft.backgroundImage = map.get('backgroundImage');
-                    })
-                });
-                return {
-                    title: '巨幕设置',
-                    view: form.elementRef
-                };*/
             }
 
         }

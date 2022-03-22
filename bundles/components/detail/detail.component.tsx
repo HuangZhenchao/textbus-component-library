@@ -101,7 +101,7 @@ export const detailComponentLoader: ComponentLoader = {
   .detail-item-content{
     min-height:100px;
   }
-  ..detail-item-title{
+  .detail-item-title{
 
   }
     `

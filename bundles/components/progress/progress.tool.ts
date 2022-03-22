@@ -6,8 +6,8 @@ export function progressToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 progress 组件',
-        tooltip:'插入 progress 组件',
+        label: '进度条',
+        tooltip:'进度条',
         onClick() {
             const state:ProgressState={
                 type:'primary',
@@ -17,7 +17,7 @@ export function progressToolConfigFactory(injector):ButtonToolConfig {
             }
             const component = progressComponent.createInstance(injector, {state:state})
             commander.insert(component)
-            //selection.setLocation(slot, 0)
+            //selection.setPosition(slot, 0)
         }
     }
 }

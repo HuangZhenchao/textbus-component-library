@@ -1,4 +1,3 @@
-export * from './control-panel.plugin'
 export * from './library.dropdown.tool'
 export * from './library.group.tool'
 

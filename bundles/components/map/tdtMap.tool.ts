@@ -6,8 +6,8 @@ export function tdtMapToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 tdtMap 组件',
-        tooltip:'插入 tdtMap 组件',
+        label: '天地图地图',
+        tooltip:'天地图地图',
         onClick() {
             const state:tdtMapState={
                 center:{x:116.404,y:39.915},
@@ -17,7 +17,7 @@ export function tdtMapToolConfigFactory(injector):ButtonToolConfig {
             
             const component = tdtMapComponent.createInstance(injector, {state:state})
             commander.insert(component)
-            //selection.setLocation(headingSlot, headingSlot.length)
+            //selection.setPosition(headingSlot, headingSlot.length)
         }
     }
 }

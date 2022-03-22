@@ -135,7 +135,6 @@ export function imageCardToolConfigFactory(injector) {
     const childI18n = i18n.getContext('plugins.toolbar.imageTool.view');
     const form = new Form({
         title: childI18n.get('title'),
-        maxHeight: '260px',
         cancelBtnText: childI18n.get('cancelBtnText'),
         confirmBtnText: childI18n.get('confirmBtnText'),
         items: [
@@ -203,19 +202,20 @@ export function imageCardToolConfigFactory(injector) {
         },
         useValue(formValue) {
             if (formValue) {
-                formValue.get('src').split(';').forEach(src=>{
+                formValue.src.split(';').forEach(src=>{
                     const slot = new Slot([
                         ContentType.Text
                     ])
                     let value = {
                         src: src,
-                        margin: formValue.get('margin'),
-                        float: formValue.get('float'),
-                        maxWidth: formValue.get('maxSize').width,
-                        maxHeight: formValue.get('maxSize').height,
-                        width: formValue.get('size').width,
-                        height: formValue.get('size').height
+                        margin: formValue.margin,
+                        float: formValue.float,
+                        maxWidth: formValue.maxSize.width,
+                        maxHeight: formValue.maxSize.height,
+                        width: formValue.size.width,
+                        height: formValue.size.height
                     };
+                        
                     const state = query.queryWrappedComponent(imageCardComponent);
                     if (state.state === QueryStateType.Enabled) {
                         state.value.useState(value);

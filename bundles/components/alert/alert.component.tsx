@@ -4,33 +4,30 @@ import {
   ContentType,
   defineComponent,
   Slot,
-  SlotLiteral,
   SlotRender, Selection,
   Translator, useContext,
   useSlots, useState,
-  VElement, VTextNode, ComponentData
+  VElement, VTextNode, ComponentData, onContextMenu, ComponentMethods, onEnter
 } from '@textbus/core'
 import {ComponentLoader, createElement, SlotParser} from '@textbus/browser'
 import { Injector } from '@tanbo/di'
-import {ComponentCreator} from "../type";
-import {Form, FormSelect, FormSwitch} from "@textbus/editor";
+import {ComponentCreator, SlotComplete} from "../type";
+import {Dialog, Form, FormSelect, FormSwitch} from "@textbus/editor";
 
 export interface AlertState{
   fill:boolean;
   type:string;
 }
-export interface AlertMethods{
-  render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-  toJSON():any,
-  createControlView():void
-}
-export const alertComponent = defineComponent<AlertMethods, AlertState>({
+
+export const alertComponent = defineComponent<ComponentMethods, AlertState>({
   type: ContentType.BlockComponent,
   name: 'AlertComponent',
-  setup(data: ComponentData<AlertState>): AlertMethods {
+  setup(data: ComponentData<AlertState>): ComponentMethods {
     const injector = useContext();
     const translator=injector.get(Translator);
-    const slots = useSlots(data.slots || [new Slot([ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent])]
+    const dialog = injector.get(Dialog);
+    const selection = injector.get(Selection);
+    const slots = useSlots(data.slots || [new Slot([ContentType.Text]),new SlotComplete()]
     )
     let state=data.state as AlertState;
     const changeController=useState(state);
@@ -39,7 +36,80 @@ export const alertComponent = defineComponent<AlertMethods, AlertState>({
       state=newState;
       console.log('changeController',state)
     })
-
+    const form = new Form({
+      confirmBtnText: '确定',
+      items: [
+        new FormSelect({
+          name: 'type',
+          label: '类型',
+          options: 'default,primary,info,success,warning,danger,dark,gray'.split(',').map(i => {
+            return {
+              label: i,
+              value: i,
+              selected: i === state.type
+            };
+          })
+        }),
+        new FormSwitch({
+          label: '是否填充',
+          name: 'fill',
+          checked: state.fill
+        })
+      ]
+    });
+    form.onComplete.subscribe(map => {
+      console.log('component',state)
+      changeController.update(draft=>{
+        draft.fill=map.get('fill');
+        draft.type=map.get('type');
+      })
+      dialog.hide()
+      
+    });
+    form.onCancel.subscribe(()=>{
+      dialog.hide()
+    })
+    onContextMenu(()=>{
+      let submenu='default,primary,info,success,warning,danger,dark,gray'.split(',').map(i => {
+        return {
+          label: i,
+          onClick(){
+            changeController.update(draft=>{
+              draft.type=i
+            })
+          }
+        };
+      })
+        return [{
+            label:"警告框设置类型",
+            submenu:submenu
+        },
+        {
+          label:"警告框设置填充",
+          submenu:[{
+              label:"是",
+              onClick(){
+                changeController.update(draft=>{
+                  draft.fill=true
+                })
+              }
+          },
+          {
+              label:"否",
+              onClick(){
+                changeController.update(draft=>{
+                  draft.fill=false
+                })
+              }
+        }]
+      }]
+    })
+    onEnter(ev=>{     
+      if(ev.target===slots.get(0)){ 
+        ev.preventDefault(); 
+      }
+      
+    })
     return {
       render(isOutputMode: boolean, slotRender: SlotRender): VElement {
         let classes='tb-alert';
@@ -50,15 +120,18 @@ export const alertComponent = defineComponent<AlertMethods, AlertState>({
           classes+=(' tb-alert-' + state.type);
         }
         console.log(classes)
+        
         const vNode=VElement.createElement('div',{
-          class:classes,
-        },[
-            <div>这是 Alert 组件，这里的内容是不可以编辑的</div>,
-            slotRender(slots.get(0)!, () => {
-              return <div/>
-            }),
-        ])
-        console.log(vNode)
+              class:classes,
+            },
+            slots.get(0)?slotRender(slots.get(0)!, () => {
+              return <div class="tb-alert-title"/>
+            }):'',
+            <div class="splitor"></div>,
+            slots.get(1)?slotRender(slots.get(1)!, () => {
+              return <div class="tb-alert-content"/>
+            }):''            
+        )        
         return vNode
         /*
         return (
@@ -71,49 +144,6 @@ export const alertComponent = defineComponent<AlertMethods, AlertState>({
             }
           </div>
         )*/
-      },
-      toJSON(): any {
-        return {
-          fill: state.fill,
-          type:state.type,
-          slot:slots.get(0)!.toJSON()
-        }
-      },
-      createControlView(){
-        const form = new Form({
-          mini: true,
-          confirmBtnText: '确定',
-          items: [
-            new FormSelect({
-              name: 'type',
-              label: '类型',
-              options: 'default,primary,info,success,warning,danger,dark,gray'.split(',').map(i => {
-                return {
-                  label: i,
-                  value: i,
-                  selected: i === state.type
-                };
-              })
-            }),
-            new FormSwitch({
-              label: '是否填充',
-              name: 'fill',
-              checked: state.fill
-            })
-          ]
-        });
-        form.onComplete.subscribe(map => {
-          console.log('component',state)
-          changeController.update(draft=>{
-            draft.fill=map.get('fill');
-            draft.type=map.get('type');
-          })
-          
-        });
-        return {
-          title: '警告框设置',
-          view: form.elementRef
-        };
       }
     }
   }
@@ -123,7 +153,6 @@ export const alertComponentLoader: ComponentLoader = {
   component: alertComponent,
   
   match(element: HTMLElement): boolean {
-    console.log('match',element)
     return element.tagName.toLowerCase() === 'div' && element.className.includes('tb-alert')
   },
   read(element: HTMLElement, context: Injector, slotParser: SlotParser): ComponentInstance {
@@ -138,27 +167,38 @@ export const alertComponentLoader: ComponentLoader = {
       }
     });
     //TODO:从html读取时取出fill和type
-    const slot = new Slot([
-      ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent
-    ])
 
-    slotParser(slot, element.children[1]! as HTMLElement)
     const alertState:AlertState={
       fill: element.className.includes('tb-alert-fill'),
       type:type,     
     }
-    console.log('read',alertState)
-    return alertComponent.createInstance(context, {slots:[slot],state:alertState})
+    return alertComponent.createInstance(context, 
+      {
+        slots:[
+          slotParser(new Slot([ContentType.Text]), element.querySelector(".tb-alert-title") as HTMLElement),
+          slotParser(new SlotComplete(), element.querySelector(".tb-alert-content") as HTMLElement)
+        ],
+        state:alertState
+      }
+    )
   },
   resources: {
     styles: [`
+    .splitor{
+      width:100%;
+      height:1px;
+      margin:10px 0px;
+      background-color:#EFEFEF;
+    }
 .tb-alert {
   padding: 10px 15px;
   border-radius: 6px;
   border: 1px solid #e9eaec;
   background-color: #f8f8f9;
+  color:#000;
   margin-top: 1em;
-  margin-bottom: 1em
+  margin-bottom: 1em;
+  position: relative;
 }
 
 .tb-alert.tb-alert-primary {
@@ -257,6 +297,6 @@ export const alertComponentCreator:ComponentCreator={
     const component = alertComponent.createInstance(injector, {slots:[slot],state:alertState});
 
     commander.insert(component)
-    selection.setLocation(slot, 0)
+    //selection.setLocation(slot, 0)
   },
 }

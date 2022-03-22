@@ -25,7 +25,6 @@ export function pkgStyleToolConfigFactory(injector) {
     });
     const form = new Form({
         title: "组件style替换为link",
-        maxHeight: '260px',
         cancelBtnText: childI18n.get('cancelBtnText'),
         confirmBtnText: childI18n.get('confirmBtnText'),
         items: [
@@ -68,8 +67,9 @@ export function pkgStyleToolConfigFactory(injector) {
             };
         },
         useValue(formValue) {
-            bPkg=formValue.get("replace")
-            styleLink=formValue.get("href")
+            console.log(formValue)
+            bPkg=formValue.replace
+            styleLink=formValue.href
             console.log(bPkg,styleLink)
         }
     };

@@ -6,8 +6,8 @@ export function cesiumToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 cesium 组件',
-        tooltip:'插入 cesium 组件',
+        label: 'cesium地图',
+        tooltip:'cesium地图',
         onClick() {
             const state:cesiumState={
                 center:{x:116.404,y:39.915},
@@ -17,7 +17,7 @@ export function cesiumToolConfigFactory(injector):ButtonToolConfig {
             
             const component = cesiumComponent.createInstance(injector, {state:state})
             commander.insert(component)
-            //selection.setLocation(headingSlot, headingSlot.length)
+            //selection.setPosition(headingSlot, headingSlot.length)
         }
     }
 }

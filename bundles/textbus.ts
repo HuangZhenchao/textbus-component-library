@@ -3,6 +3,13 @@ import { Editor, Toolbar } from "@textbus/editor";
 import { defaultOptions,defaultToolFactories } from "./defaultOptions";
 import { concatHTML } from "./utils/output";
 import { SetUploader } from "./utils/uploader";
+export interface OutputSetting{
+    cbSaveJSON?: Function;
+    cbSaveHTML?: Function;    
+    saveInterval?:number;
+    bConcatHtml?: Boolean;
+    styleLink?:string;
+}
 
 export interface TextbusConfig{
     uploadFilePromise?: Function;
@@ -10,10 +17,7 @@ export interface TextbusConfig{
     formatLoaders?: [];
     toolFactories?: [];
     host?: string | HTMLElement;
-    cbSaveJSON?: Function;
-    cbSaveHTML?: Function;
-    bConcatHtml?: Boolean;
-    saveInterval?:number;
+    outputSetting:OutputSetting
 }
 export class TextbusApp{
     editor:Editor
@@ -32,7 +36,7 @@ export class TextbusApp{
         selfConfig.uploadFilePromise?defaultOptions.uploader=SetUploader(selfConfig.uploadFilePromise):'';
         
         this.editor = new Editor(selector,defaultOptions);
-        this.editor.onChange.pipe(auditTime(5000)).subscribe(() => {
+        this.editor.onChange.pipe(auditTime(selfConfig.outputSetting.saveInterval||0)).subscribe(() => {
             this.onSave();
         })
     }
@@ -40,13 +44,13 @@ export class TextbusApp{
         this.editor.replaceContent(content);
     }
     onSave(){
-        console.log("onSave")
-        if(this.selfConfig.cbSaveJSON){
-            this.selfConfig.cbSaveJSON(this.editor.getJSON().content)
+        let outputSetting=this.selfConfig.outputSetting
+        if(outputSetting.cbSaveJSON){
+            outputSetting.cbSaveJSON(JSON.stringify(this.editor.getJSON().content,null,"  "))
         }
-        if(this.selfConfig.cbSaveHTML!=undefined){
+        if(outputSetting.cbSaveHTML!=undefined){
             let content=this.editor.getContents()
-            this.selfConfig.cbSaveHTML(this.selfConfig.bConcatHtml?concatHTML(content):content)
+            outputSetting.cbSaveHTML(outputSetting.bConcatHtml?concatHTML(content,outputSetting.styleLink):content.content)
         }
     }
 }

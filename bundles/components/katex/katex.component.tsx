@@ -4,22 +4,18 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, ComponentData
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, ComponentData, onContextMenu
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
 import * as Katex from 'katex';
 import 'katex/dist/katex.min.css'
-import { Form, FormSelect, FormSwitch, FormTextarea } from "@textbus/editor";
-import { UIControlPanel } from "../control-panel.plugin";
+import { Dialog, Form, FormSelect, FormSwitch, FormTextarea } from "@textbus/editor";
 export interface katexState{
     source:string,
     //block:boolean
 }
-export interface katexMethods{
-    render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    createControlView():void
-}
+
 function domToVDom(el:Element) {
     const attrs = {};
     el.getAttributeNames().forEach(key => {
@@ -32,19 +28,49 @@ function domToVDom(el:Element) {
         return child.textContent;
     }));
 }
-const SetComponentOptions=function(block:boolean):ComponentOptions<katexMethods,katexState>{
-    const katexComponentOptions:ComponentOptions<katexMethods,katexState>={
+const SetComponentOptions=function(block:boolean):ComponentOptions<ComponentMethods,katexState>{
+    const katexComponentOptions:ComponentOptions<ComponentMethods,katexState>={
         name: block?"katexBlockComponent":"katexInlineComponent",
         type: block?ContentType.BlockComponent:ContentType.InlineComponent,
-        setup(data: ComponentData<katexState> ): katexMethods {
+        setup(data: ComponentData<katexState> ): ComponentMethods {
             const injector = useContext();
-            const controlPanel=injector.get(UIControlPanel)
+            const dialog=injector.get(Dialog)
             let state=data.state as katexState;
             const changeController=useState(state);
             //useState({fill:false,type:'info',slot:slots.toJSON()})
             changeController.onChange.subscribe(newState=>{
                 state=newState;
-                console.log('changeController',state)
+            })
+            const form = new Form({
+                confirmBtnText: '确定',
+                cancelBtnText:'关闭',
+                items: [
+                  new FormTextarea({
+                      name: 'source',
+                      placeholder: "输入LaTeX语法",
+                      label: '',
+                      value: state.source
+                  }),
+                ]
+              });
+            form.onComplete.subscribe(map => {
+                changeController.update(draft=>{
+                    draft.source=map.get('source');
+                    //draft.block=map.get('block');
+                })
+                dialog.hide()
+                //console.log('component',alertState,instance.methods.toJSON())
+            });
+            form.onCancel.subscribe(()=>{
+                dialog.hide()
+            })
+            onContextMenu(()=>{
+                return [{
+                    label:"公式设置",
+                    onClick(){
+                        dialog.show(form.elementRef)
+                    }
+                }]
             })
             return {
                 render(isOutputMode:boolean, slotRender:SlotRender){
@@ -72,47 +98,12 @@ const SetComponentOptions=function(block:boolean):ComponentOptions<katexMethods,
                     let el=new VElement('div', {                    
                             class:block?'tb-katex-block':'tb-katex-inline',
                             //style:{display:block?'block':'inline-block'},
-                            source: encodeURIComponent(state.source),
-                            onClick:(e:Event)=>{
-                                let view=this.createControlView()
-                                controlPanel.showPanels([view])
-                                e.stopPropagation();                                
-                            }
+                            source: encodeURIComponent(state.source)                            
                         },
                         dom ? [domToVDom(dom)] : []
                     );
-                    console.log(state,el)
                     return el;
     
-                },
-
-                createControlView(){
-                    console.log('create',state)
-                    const form = new Form({
-                      mini: true,
-                      confirmBtnText: '确定',
-                      cancelBtnText:'关闭',
-                      items: [
-                        new FormTextarea({
-                            name: 'source',
-                            placeholder: "输入LaTeX语法",
-                            label: '',
-                            value: state.source
-                        }),
-                      ]
-                    });
-                    form.onComplete.subscribe(map => {
-                      changeController.update(draft=>{
-                        draft.source=map.get('source');
-                        //draft.block=map.get('block');
-                      })
-                      controlPanel.showPanels([])
-                      //console.log('component',alertState,instance.methods.toJSON())
-                    });
-                    return {
-                      title: 'Katex',
-                      view: form.elementRef
-                    };
                 }
     
             }

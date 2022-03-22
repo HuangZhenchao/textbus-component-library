@@ -6,8 +6,8 @@ export function baiduMapToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 baiduMap 组件',
-        tooltip:'插入 baiduMap 组件',
+        label: '百度地图',
+        tooltip:'百度地图',
         onClick() {
             const state:baiduMapState={
                 center:{x:116.404,y:39.915},
@@ -17,7 +17,7 @@ export function baiduMapToolConfigFactory(injector):ButtonToolConfig {
             
             const component = baiduMapComponent.createInstance(injector, {state:state})
             commander.insert(component)
-            //selection.setLocation(headingSlot, headingSlot.length)
+            //selection.setPosition(headingSlot, headingSlot.length)
         }
     }
 }

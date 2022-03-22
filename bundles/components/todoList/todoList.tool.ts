@@ -6,8 +6,8 @@ export function todoListToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 todoList 组件',
-        tooltip:'插入 todoList 组件',
+        label: '待办事项',
+        tooltip:'待办事项',
         onClick() {
             const slot = new Slot([
                 ContentType.BlockComponent,
@@ -22,7 +22,7 @@ export function todoListToolConfigFactory(injector):ButtonToolConfig {
             }
             const component = todoListComponent.createInstance(injector, {state:state,slots:[slot]})
             commander.insert(component)
-            selection.setLocation(slot, 0)
+            selection.setPosition(slot, 0)
         }
     }
 }

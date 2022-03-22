@@ -4,12 +4,12 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, ComponentData
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, ComponentData, onContextMenu
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
-import { FileUploader, Form, FormSelect, FormSwitch, FormTextarea, FormTextField, headingComponent } from "@textbus/editor";
-import { UIControlPanel } from "../control-panel.plugin";
+import { Dialog, FileUploader, Form, FormSelect, FormSwitch, FormTextarea, FormTextField, headingComponent } from "@textbus/editor";
+
 export class JumbotronSlot extends Slot{
     constructor(){
         super([ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent]);
@@ -23,17 +23,14 @@ export interface jumbotronState{
     backgroundPosition: string;
 }
 
-export interface jumbotronMethods{
-    render(isOutputMode: boolean, slotRender: SlotRender):VElement,
-    createControlView():void
-}
-export const jumbotronComponent=defineComponent<jumbotronMethods,jumbotronState>({
+
+export const jumbotronComponent=defineComponent<ComponentMethods,jumbotronState>({
     name: "jumbotronComponent",
     type: ContentType.BlockComponent,
 
-    setup(data: ComponentData<jumbotronState>): jumbotronMethods {
+    setup(data: ComponentData<jumbotronState>): ComponentMethods {
         const injector = useContext();        
-        const controlPanel=injector.get(UIControlPanel)
+        const dialog=injector.get(Dialog)
         const fileUploader = injector.get(FileUploader);
         
         const slots=useSlots(
@@ -46,6 +43,51 @@ export const jumbotronComponent=defineComponent<jumbotronMethods,jumbotronState>
             state=newState;
             console.log('changeController',state)
         })
+        const form = new Form({
+            confirmBtnText: '确定',
+            items: [
+                new FormTextField({
+                    name: 'minHeight',
+                    value: state.minHeight,
+                    placeholder: '',
+                    label: '巨幕最小高度'
+                }),
+                new FormTextField({
+                    label: '背景图片地址',
+                    name: 'backgroundImage',
+                    placeholder: '',
+                    canUpload: true,
+                    uploadType: 'image',
+                    uploadBtnText: '上传',
+                    value: state.backgroundImage,
+                    fileUploader,
+                    validateFn(value) {
+                        if (!value) {
+                            return 'test';
+                        }
+                        return false;
+                    }
+                })
+            ]
+        });
+        form.onComplete.subscribe(map => {
+            changeController.update(draft=>{
+                draft.minHeight = map.get('minHeight');
+                draft.backgroundImage = map.get('backgroundImage');
+            })
+            dialog.hide()
+        });
+        form.onCancel.subscribe(()=>{
+            dialog.hide()
+        })
+        onContextMenu(()=>{
+            return [{
+                label:"巨幕设置",
+                onClick(){
+                    dialog.show(form.elementRef)
+                }
+            }]
+        })
         return {
             render(isOutputMode:boolean, slotRender:SlotRender){
 
@@ -56,55 +98,10 @@ export const jumbotronComponent=defineComponent<jumbotronMethods,jumbotronState>
                         backgroundSize: state.backgroundSize || 'cover',
                         backgroundPosition: state.backgroundPosition || 'center',
                         minHeight: state.minHeight
-                    },
-                    onClick:(e:Event)=>{
-                        let view=this.createControlView();
-                        controlPanel.showPanels([view]);
-                        e.stopPropagation();
                     }
                  }
                 );
                 return slotRender(slots.get(0)!, ()=>{return vEle});
-            },
-            createControlView(){
-                const form = new Form({
-                    mini: true,
-                    confirmBtnText: '确定',
-                    items: [
-                        new FormTextField({
-                            name: 'minHeight',
-                            value: state.minHeight,
-                            placeholder: '',
-                            label: '巨幕最小高度'
-                        }),
-                        new FormTextField({
-                            label: '背景图片地址',
-                            name: 'backgroundImage',
-                            placeholder: '',
-                            canUpload: true,
-                            uploadType: 'image',
-                            uploadBtnText: '上传',
-                            value: state.backgroundImage,
-                            fileUploader,
-                            validateFn(value) {
-                                if (!value) {
-                                    return 'test';
-                                }
-                                return false;
-                            }
-                        })
-                    ]
-                });
-                form.onComplete.subscribe(map => {
-                    changeController.update(draft=>{
-                        draft.minHeight = map.get('minHeight');
-                        draft.backgroundImage = map.get('backgroundImage');
-                    })
-                });
-                return {
-                    title: '巨幕设置',
-                    view: form.elementRef
-                };
             }
 
         }

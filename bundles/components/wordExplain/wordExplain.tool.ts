@@ -11,8 +11,8 @@ export function wordExplainToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 wordExplain 组件',
-        tooltip:'插入 wordExplain 组件',
+        label: '名词解释',
+        tooltip:'名词解释',
         onClick() {
             let initSlots=[new WordExplainTitleSlot(),new WordExplainSubtitleSlot(),new WordExplainDetailSlot()]
             let initState:wordExplainState={
@@ -20,7 +20,7 @@ export function wordExplainToolConfigFactory(injector):ButtonToolConfig {
             }
             const component = wordExplainComponent.createInstance(injector, {slots:initSlots,state:initState})
             commander.insert(component)
-            selection.setLocation(initSlots[0], 0)
+            selection.setPosition(initSlots[0], 0)
         }
     }
 }

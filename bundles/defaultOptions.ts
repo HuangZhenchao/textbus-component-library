@@ -1,11 +1,13 @@
 import {
+    EditorController,
     EditorOptions,
+    Layout,
     LinkJumpTipPlugin,
     Toolbar,
 } from '@textbus/editor';
 //导入ComponentLoader
 import { audioComponentLoader, blockComponentLoader, blockquoteComponentLoader, headingComponentLoader, imageComponentLoader, listComponentLoader, paragraphComponentLoader, preComponentLoader, tableComponentLoader, videoComponentLoader } from "@textbus/editor";
-import { alertComponentLoader, todoListComponentLoader, timelineComponentLoader, stepComponentLoader, wordExplainComponentLoader, progressComponentLoader, katexInlineComponentLoader, imageCardComponentLoader, jumbotronComponentLoader, baiduMapComponentLoader, tdtMapComponentLoader, cesiumComponentLoader, detailComponentLoader } from ".";
+import { alertComponentLoader, todoListComponentLoader, timelineComponentLoader, stepComponentLoader, wordExplainComponentLoader, progressComponentLoader, katexInlineComponentLoader, imageCardComponentLoader, jumbotronComponentLoader, baiduMapComponentLoader, tdtMapComponentLoader, cesiumComponentLoader, detailComponentLoader } from "./components/public-api";
 //FormatLoader
 import { boldFormatLoader, italicFormatLoader, colorFormatLoader, fontFamilyFormatLoader, fontSizeFormatLoader, letterSpacingFormatLoader, lineHeightFormatLoader, strikeThroughFormatLoader, subscriptFormatLoader, superscriptFormatLoader, underlineFormatLoader, codeFormatLoader, blockBackgroundColorFormatLoader, linkFormatLoader, textBackgroundColorFormatLoader, textAlignFormatLoader, textIndentFormatLoader, verticalAlignFormatLoader, dirFormatLoader } from "@textbus/editor";
 //Tool
@@ -18,9 +20,10 @@ import './assets/component-library.plugin.scss'
 
 import {OutlinesPlugin} from './plugin/outlines-plugin/outlines.plugin'
 
-import {UIControlPanel} from "./components/control-panel.plugin";
-
-const controlPanel=new UIControlPanel();
+import { EDITABLE_DOCUMENT } from '@textbus/browser';
+import {Selection} from "@textbus/core";
+import { Inject, Injectable } from '@tanbo/di';
+//const controlPanel=new UIControlPanel();
 
 export const defaultComponentLoader=[
     alertComponentLoader,//
@@ -114,12 +117,8 @@ export const defaultOptions:EditorOptions = {
         new Toolbar(defaultToolFactories),
         new LinkJumpTipPlugin(),
         new OutlinesPlugin(),
-        //new ComponentLibraryPlugin(),
-        controlPanel,
     ],
-    providers:[
-            {provide:UIControlPanel,useValue:controlPanel}
-        ],
+    providers:[],
     //content:'<p>ddd</p>',
     placeholder: "占位测试"
 };

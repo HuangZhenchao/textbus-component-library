@@ -1,27 +1,37 @@
 import {blockquoteToolConfigFactory, ButtonTool,ButtonToolConfig} from '@textbus/editor'
 import { Commander, ContentType, Slot, Selection } from '@textbus/core'
 import {alertComponent, AlertState} from './alert.component'
+import { SlotComplete } from '../type'
 
 export function alertToolConfigFactory(injector):ButtonToolConfig {
   const commander = injector.get(Commander)
   const selection = injector.get(Selection)
   return {
-    label: '插入 Alert 组件',
-    tooltip:'插入 Alert 组件',
+    label: '警告框',
+    tooltip:'警告框',
     onClick() {
-      const slot = new Slot([
-        ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent
-      ])
-
+      const slot = new Slot([ContentType.Text])
+      slot.insert("这是Alert组件")
       const alertState:AlertState={
         fill: true,
         type:'primary',
       }
-      const component = alertComponent.createInstance(injector, {slots:[slot],state:alertState})
+      const component = alertComponent.createInstance(injector, 
+        {
+          slots:[
+            slot,
+            new SlotComplete()
+          ],
+          state:alertState
+        }
+      )
+    
       commander.insert(component)
-      selection.setLocation(slot, 0)
+      selection.setPosition(slot, slot.length)
     }
   }
 }
 
-export const alertTool:ButtonTool= new ButtonTool(alertToolConfigFactory)
+export function alertTool(){
+  return new ButtonTool(alertToolConfigFactory)
+}

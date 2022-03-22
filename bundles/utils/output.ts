@@ -1,5 +1,4 @@
 import {createElement} from "@textbus/browser";
-import {bPkg,styleLink} from "./settings.pkgStyle.tool"
 
 function cssMin(str) {
     return str
@@ -7,7 +6,7 @@ function cssMin(str) {
         .replace(/([>{}:;,])\s*/g, '$1')
         .replace(/;}/g, '}').replace(/\s+/, ' ').trim();
 }
-export const concatHTML=(contents) => {
+export const concatHTML=(contents,styleLink) => {
     const html=createElement('html',{})
     const head=createElement('head',{})
     const body=createElement('body',{})
@@ -39,7 +38,7 @@ export const concatHTML=(contents) => {
         scriptEle.src=scriptSrc;
         head.appendChild(scriptEle);
     })
-    if(bPkg){
+    if(styleLink){
         const link={
             rel: 'stylesheet',        
             href: styleLink,    
@@ -54,7 +53,6 @@ export const concatHTML=(contents) => {
         head.appendChild(style);
     }
     
-    console.log(html.outerHTML);
     return html.outerHTML
 }
 export function concatStyle(contents){
@@ -63,6 +61,6 @@ export function concatStyle(contents){
         return [((_a = metadata.styles) === null || _a === void 0 ? void 0 : _a.join('')) || '', ((_b = metadata.editModeStyles) === null || _b === void 0 ? void 0 : _b.join('')) || ''].join('');
     }).join('');
     const docStyles = cssMin([componentStyles, ...(contents.styleSheets || [])].join(''));
-    //return docStyles
-    return styleLink
+    return docStyles
+    //return styleLink
 }

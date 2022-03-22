@@ -6,8 +6,8 @@ export function detailToolConfigFactory(injector):ButtonToolConfig {
   const commander = injector.get(Commander)
   const detailion = injector.get(Selection)
   return {
-    label: '插入 detail 组件',
-    tooltip:'插入 detail 组件',
+    label: '商品详情',
+    tooltip:'商品详情',
     onClick() {
 
       const detailData={

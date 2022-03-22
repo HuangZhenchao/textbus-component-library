@@ -59,10 +59,10 @@ export const wordExplainComponent=defineComponent<ComponentMethods,wordExplainSt
             render(isOutputMode:boolean, slotRender:SlotRender){
                 return (VElement.createElement("div", {class:'tb-word-explain'},
                     VElement.createElement("div", { class: "tb-word-explain-title-group", style: { width: state!.width } },
-                        slotRender(slots.get(0)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-title" })}),
-                        slotRender(slots.get(1)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-subtitle" })})
+                      slots.get(0)?slotRender(slots.get(0)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-title" })}):'',
+                        slots.get(1)?slotRender(slots.get(1)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-subtitle" })}):''
                     ),
-                        slotRender(slots.get(2)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-detail" })}),
+                    slots.get(2)?slotRender(slots.get(2)!, ()=>{return VElement.createElement("div", { class: "tb-word-explain-detail" })}):"",
                     !isOutputMode && VElement.createElement("span", { class: "tb-word-explain-close", onClick: () => {
                             const instance = slots.get(0)?.parent as ComponentInstance;
                             const pSlot = instance?.parent;

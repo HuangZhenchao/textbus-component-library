@@ -6,8 +6,8 @@ export function stepToolConfigFactory(injector):ButtonToolConfig {
     const commander = injector.get(Commander)
     const selection = injector.get(Selection)
     return {
-        label: '插入 step 组件',
-        tooltip:'插入 step 组件',
+        label: '步骤条',
+        tooltip:'步骤条',
         onClick() {
 
             let slots=[new StepSlot()];
@@ -16,7 +16,7 @@ export function stepToolConfigFactory(injector):ButtonToolConfig {
             }
             const component = stepComponent.createInstance(injector, {slots:slots,state:initState})
             commander.insert(component)
-            selection.setLocation(slots[0], 0)
+            selection.setPosition(slots[0], 0)
         }
     }
 }
