@@ -5,11 +5,11 @@
 <script lang="ts">   
     import { Component, Prop, Vue } from 'vue-property-decorator';
     import { ContextMenu, createEditor, Toolbar } from '@textbus/editor';
-    import {detailComponentLoader} from '../../bundles/components/detail/detail.component'
-    import {TextbusApp, TextbusConfig} from '../../bundles/textbus'
+    import {TextbusApp, TextbusConfig} from '../../textbus/_public-api'
     import { api } from '@/utils/axios/api';
     //import { h } from 'vue';
-    
+    import '@textbus/editor/bundles/textbus.min.css'
+    import '../../bundles/textbus.min.css'
     @Component
     export default class Index extends Vue {
         filePath: string="upload\\cnote\\article.cnote";

@@ -1,0 +1,13 @@
+.textbus-outlines-plugin{min-width:100px;max-width:300px;overflow:auto;display:none;border-right:1px solid #e9eaec;height:100%;box-sizing:border-box;font-size:14px;background-color:#fff}
+.textbus-outlines-plugin-show{display:block}
+.textbus-outlines-plugin-title{height:36px;line-height:36px;padding:0 15px;font-size:15px;font-weight:normal;border-bottom:1px solid #e9eaec;background-color:#f8f8f9;margin:0;position:sticky;top:0;z-index:1}
+.textbus-outlines-plugin-btn-wrapper{float:left}.textbus-outlines-plugin-links{padding:10px 15px}
+.textbus-outlines-plugin-links .textbus-outlines-plugin-h1{line-height:2;padding-left:0em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-outlines-plugin-links .textbus-outlines-plugin-h2{line-height:2;padding-left:1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-outlines-plugin-links .textbus-outlines-plugin-h3{line-height:2;padding-left:2em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-outlines-plugin-links .textbus-outlines-plugin-h4{line-height:2;padding-left:3em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-outlines-plugin-links .textbus-outlines-plugin-h5{line-height:2;padding-left:4em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-outlines-plugin-links .textbus-outlines-plugin-h6{line-height:2;padding-left:5em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-outlines-plugin-links a{display:block;color:inherit;text-decoration:none;position:relative}
+.textbus-outlines-plugin-links a:before{content:"";position:absolute;top:0;bottom:50%;left:-1em;width:.6em;border-bottom:1px dotted #bbbec4;border-left:1px dotted #bbbec4}
+.textbus-outlines-plugin-links a:hover{color:#1296db}

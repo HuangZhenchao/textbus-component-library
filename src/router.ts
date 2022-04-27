@@ -8,7 +8,7 @@ Vue.use(VueRouter);
 export const constantRoutes = [ 
   {
     path: '/',
-    redirect: '/textbus',
+    redirect: '/textbusTest',
 
   },
   {

@@ -1,0 +1,49 @@
+.textbus-container{width:100%;height: 100%;}
+.textbus-component-stage{
+    width:260px;
+    height:500px;
+    display:block;
+    background-color:#fff;
+    border-left:1px solid #e9eaec;
+    position:relative;
+    z-index:3;}
+.textbus-component-stage-list{box-sizing:content-box;padding:15px 10px;width:240px;overflow:hidden}
+.textbus-component-stage-expand{display:block}
+.textbus-component-example-item{width:100px;height:100px;margin:5px 10px;float:left;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.textbus-component-example{position:relative;height:70px;background-color:#fff;box-shadow:1px 1px 3px rgba(0,0,0,.2);border-radius:3px;overflow:hidden;transition:transform .15s;cursor:pointer}
+.textbus-component-example-content{position:relative;z-index:0}
+.textbus-component-example-mask{position:absolute;left:0;right:0;top:0;bottom:0;z-index:1}
+.textbus-component-example:hover{transform:scale(1.12)}
+.textbus-component-example-name{text-align:center;font-size:12px;line-height:30px;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textbus-control-panel-fixed-btn{background:none;border:none;cursor:pointer;outline:none}
+.textbus-control-panel-fixed-btn-active{color:#1296db}
+.textbus-lib-switch{float:right}
+.textbus-lib-switch span{margin-right:3px;vertical-align:middle}
+
+.textbus-ui-left,.textbus-ui-right{height:100%;position:relative;overflow:auto;z-index:1;background-color:#fff}
+.textbus-ui-bottom{background-color: #f8f8f9;border: 1px solid #dddee1;
+    padding: 8px 10px 3px;
+    min-height: 24px;
+    border-radius: inherit;position:relative;z-index:0}
+
+.textbus-tab{display:flex;flex-direction:column;height:100%;overflow-y:auto}
+.textbus-tab-head{height:36px;box-sizing:border-box;padding:12px 10px 0;border-bottom:1px solid #e9eaec;background-color:#f8f8f9;display:flex;position:sticky;top:0;z-index:1}
+.textbus-tab-btn-wrapper{height:24px;flex:1;overflow:hidden}
+.textbus-tab-btn{background-color:#f8f8f9;cursor:pointer;outline:none;border:1px solid #e9eaec;height:24px;padding:0 8px;font-size:13px;border-radius:5px 5px 0 0;margin-right:4px}
+.textbus-tab-btn:hover{background:#fff}
+.textbus-tab-btn-active{background:#fff;border-bottom-color:#fff}
+.textbus-tab-view{flex:1;position:relative;z-index:0}
+
+.textbus-control-panel{width:0;display:flex;flex-direction:column;z-index:2;position:absolute;right:0;top:0;bottom:0;overflow:hidden;transition:width .15s cubic-bezier(0.36, 0.66, 0.04, 1)}
+.textbus-control-panel-container{overflow:hidden;width:240px;height:100%;background-color:#fff;border-left:1px solid #e9eaec}
+.textbus-control-panel-show{width:240px}
+.textbus-control-panel-fixed{width:240px;position:static;transition:none}
+textarea{
+    display: block;
+}
+.ace-container{
+    min-width:500px;
+    min-height: 500px;
+    padding:2px;
+    border: 1px solid #F8F8F9;
+}

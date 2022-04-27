@@ -1,0 +1,31 @@
+.textbus-form-group-column{
+    padding:5px;
+    display: flex;
+    flex-direction: column;
+}
+.textbus-control-label-column{
+    display: block;
+    text-align: right;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100px;
+}
+.textbus-control-value-column{
+    
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin: 0;
+    
+}
+
+.textbus-input-group-column {
+    position: relative;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-size: 14px;
+}

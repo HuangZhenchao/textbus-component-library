@@ -1,3 +1,14 @@
+0.73.1 2022/4/27
+改变项目结构
+src-测试代码
+textbus-ts源码，textbus的组件、插件、工具，ts格式
+compile-ts编译为js
+bundles-打包为可标签引用的js、css，js模块名为textbusLib，使用见test.html
+
+0.55.1 2022/4/07
+新增插件——字数统计
+
+
 0.51.1 2022/3/22
   对应 "@textbus/editor": "^2.0.0-alpha.51"
   补充说明文档,把组件控制放在右键菜单中

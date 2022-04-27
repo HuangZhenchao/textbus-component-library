@@ -1,5 +1,32 @@
 {
   "compilerOptions": {
+    "declaration": true,
+    "useDefineForClassFields": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["esnext", "dom","dom.iterable"],
+    "target": "es6",
+    "strict": true,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "compile/",
+    "downlevelIteration": true,
+    "jsx": "react",
+    "jsxFactory": "VElement.createElement",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+  },
+  /*
+  "compilerOptions": {
+    "outDir": "./js",
     "noEmit": true,
     "target": "esnext",
     "module": "esnext",
@@ -12,14 +39,14 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    //"sourceMap": true,
     "baseUrl": ".",
     "types": [
       "webpack-env"
     ],
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     },
     "lib": [
@@ -28,14 +55,14 @@
       "dom.iterable",
       "scripthost"
     ]
-  },
+  },*/
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-, "src/myGroup.tool.js"  ],
+    "textbus/**/*.ts", 
+    "textbus/**/*.tsx",
+    "textbus/**/*.js" ],
   "exclude": [
     "node_modules"
   ]

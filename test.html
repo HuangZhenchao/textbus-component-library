@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://textbus.io/lib/textbus.min.css">
+  <script src="https://textbus.io/lib/textbus.min.js"></script>
+  <script src="./bundles/textbus-component.min.js"></script>
+  <link rel="stylesheet" href="./bundles/textbus.min.css">
+</head>
+<body>
+  <div id="editor"  style="width:100%;height: 100vh;display: flex;"></div>
+  <script>
+      console.log("window",window)
+      var config={
+            outputSetting:{
+                //cbSaveHTML:this.cbSaveHTML,
+                //cbSaveJSON:this.cbSaveJSON,
+                saveInterval:10000,
+                bConcatHtml:true,
+                //styleLink:"http://106.55.148.203:8002/upload/textbus.component.style.css"
+            },
+            //uploadFilePromise:api.upload.image,
+            
+        }
+    //var editor = textbus.editor.createEditor(document.getElementById('editor'))
+    var textbus=new textbusLib.TextbusApp(document.getElementById('editor'),config);
+            textbus.editor.onReady.subscribe((value)=>{
+                /*
+                console.log("ContextMenu",ContextMenu);
+                const form = new FormData();
+                form.append('filePath',this.filePath)
+                api.r.cnote(form).then(response=>{
+                    let content=response.data.content;
+                    content=JSON.parse(content);
+                    console.log("newContent",content);
+                    //content='<p><div>123</div></p>';
+                    //const editor = createEditor(document.getElementById('editor')!,content,api.upload.image);
+                    this.textbus.replaceContent(content);
+                })*/
+                textbus.replaceContent("<p></p>");
+                
+            });
+    textbus.editor.onChange.subscribe(function() {
+      const contents = textbus.editor.getContents()
+      console.log(contents)
+    })
+  </script>
+</body>
+</html>
