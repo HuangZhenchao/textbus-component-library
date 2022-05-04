@@ -1,11 +1,12 @@
 {
   "name": "@huangzc/textbus",
-  "version": "0.73.2",
+  "version": "0.73.3",
   "private": false,
   "main": "./bundles/_public-api.ts",
   "scripts": {
     "serve": "vue-cli-service serve --host 0.0.0.0",
     "build": "vue-cli-service build",
+    "tsc": "tsc -p tsconfig.json",
     "webpack-sass": "webpack --config webpack-sass.config.js",
     "webpack-ts": "webpack --config webpack-build.config.js"
   },

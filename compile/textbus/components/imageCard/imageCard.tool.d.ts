@@ -23,3 +23,4 @@ export declare function imageCardToolConfigFactory(injector: any): {
     useValue(formValue: any): void;
 };
 export declare const imageCardTool: DialogTool;
+export declare const imageCardExample: string;

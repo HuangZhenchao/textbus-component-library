@@ -3,3 +3,4 @@ export declare function katexInlineToolConfigFactory(injector: any): ButtonToolC
 export declare function katexBlockToolConfigFactory(injector: any): ButtonToolConfig;
 export declare const katexInlineTool: ButtonTool;
 export declare const katexBlockTool: ButtonTool;
+export declare const katexExample: string;

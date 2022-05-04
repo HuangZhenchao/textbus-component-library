@@ -280,24 +280,3 @@ export const alertComponentLoader: ComponentLoader = {
   },
 }
 
-export const alertComponentCreator:ComponentCreator={
-  name: '警告框',
-  category: 'TextBus',
-  example: `<img src="data:image/svg+xml;charset=UTF-8,${encodeURIComponent('<svg width="100" height="70" xmlns="http://www.w3.org/2000/svg"><g><rect fill="#fff" height="100%" width="100%"/></g><rect width="90%" height="20" fill="#eee" stroke="#dedede" rx="5" ry="5" x="5" y="25"></rect><text font-family="Helvetica, Arial, sans-serif" font-size="10" x="10" y="35" stroke-width="0" stroke="#000" fill="#000000">文本内容</text></svg>')}">`,
-  create(injector){
-    const commander=injector.get(Commander)
-    const selection=injector.get(Selection)
-    const slot = new Slot([
-      ContentType.Text,ContentType.BlockComponent,ContentType.InlineComponent
-    ])
-
-    const alertState:AlertState={
-      fill: true,
-      type:'primary',
-    }
-    const component = alertComponent.createInstance(injector, {slots:[slot],state:alertState});
-
-    commander.insert(component)
-    //selection.setLocation(slot, 0)
-  },
-}

@@ -1,18 +1,8 @@
 import { GroupToolConfig,GroupTool, ToolType, ButtonToolMenu, DialogMenu } from '@textbus/editor';
 import { I18n } from '@textbus/editor';
 import {blockquoteToolConfigFactory} from '@textbus/editor';
+import { alertToolConfigFactory, imagesToolConfigFactory, imageCardToolConfigFactory, todoListToolConfigFactory, timelineToolConfigFactory, stepToolConfigFactory, wordExplainToolConfigFactory, progressToolConfigFactory, jumbotronToolConfigFactory, cesiumToolConfigFactory, detailToolConfigFactory, katexInlineToolConfigFactory, katexBlockToolConfigFactory, TreeGraphToolConfigFactory } from '../../components/_public-api';
 
-import { alertToolConfigFactory ,imageCardToolConfigFactory,imagesToolConfigFactory,wordExplainToolConfigFactory} from './_public-api';
-
-import { stepToolConfigFactory} from "./step/step.tool";
-import { timelineToolConfigFactory} from "./timeline/timeline.tool";
-import { todoListToolConfigFactory} from "./todoList/todoList.tool";
-import { progressToolConfigFactory} from "./progress/progress.tool";
-import { jumbotronToolConfigFactory } from './jumbotron/jumbotron.tool';
-import { cesiumToolConfigFactory } from './map/cesium.tool';
-import { detailToolConfigFactory } from './detail/detail.tool';
-import { katexInlineToolConfigFactory,katexBlockToolConfigFactory } from './katex/katex.tool';
-import { TreeGraphToolConfigFactory } from './antvG6/TreeGraph.tool';
 export function insertObjectToolConfigFactory(injector){
     const i18n = injector.get(I18n);
     return {

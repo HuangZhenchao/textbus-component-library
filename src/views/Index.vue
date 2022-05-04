@@ -9,7 +9,7 @@
     import { api } from '@/utils/axios/api';
     //import { h } from 'vue';
     import '@textbus/editor/bundles/textbus.min.css'
-    import '../../bundles/textbus.min.css'
+    import '../../bundles/textbusLib.min.css'
     @Component
     export default class Index extends Vue {
         filePath: string="upload\\cnote\\article.cnote";

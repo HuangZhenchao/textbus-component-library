@@ -1,5 +1,6 @@
 import { Slot, ContentType } from "@textbus/core";
 import {Injector} from "@tanbo/di";
+import { ButtonToolConfig, ToolType } from "@textbus/editor";
 
 export interface ComponentCreator {
     example: string | HTMLElement;
@@ -18,3 +19,4 @@ export interface componentStyle{
   margin?:string;
   float?:string;
 }
+

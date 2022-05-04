@@ -13,13 +13,13 @@ import { alertComponentLoader, todoListComponentLoader, timelineComponentLoader,
 import { boldFormatLoader, italicFormatLoader, colorFormatLoader, fontFamilyFormatLoader, fontSizeFormatLoader, letterSpacingFormatLoader, lineHeightFormatLoader, strikeThroughFormatLoader, subscriptFormatLoader, superscriptFormatLoader, underlineFormatLoader, codeFormatLoader, blockBackgroundColorFormatLoader, linkFormatLoader, textBackgroundColorFormatLoader, textAlignFormatLoader, textIndentFormatLoader, verticalAlignFormatLoader, dirFormatLoader } from "@textbus/editor";
 //Tool
 import { historyBackTool, historyForwardTool, defaultGroupTool, headingTool, boldTool, italicTool, strikeThroughTool, underlineTool, olTool, ulTool, fontSizeTool, textIndentTool, colorTool, textBackgroundTool, insertParagraphBeforeTool, insertParagraphAfterTool, fontFamilyTool, linkTool, unlinkTool, imageTool, textAlignTool, tableAddTool, tableRemoveTool, cleanTool } from "@textbus/editor";
-import { libraryGroupTool} from "./components/_public-api";
-import { settingsGroupTool } from "./utils/settings.group.tool";
+import { libraryGroupTool,libraryDropdownTool} from "./plugin/_public-api";
+import { settingsGroupTool, } from "./utils/settings.group.tool";
 
 
-
-import {OutlinesPlugin,WordCountPlugin,WordCountSelected} from './plugin/public-api'
+import {OutlinesPlugin,WordCountPlugin,WordCountSelected} from './plugin/_public-api'
 import { TreeGraphComponentLoader } from './components/antvG6/TreeGraph.component';
+import { LibraryDrawerPlugin } from './plugin/library.drawer.plugin';
 
 //const controlPanel=new UIControlPanel();
 
@@ -89,7 +89,7 @@ export const defaultToolFactories=[
 
     
     [libraryGroupTool],//自定义组
-    //[libraryDropdownTool],//自定义组件库
+    [libraryDropdownTool],//自定义组件库
     //[imagesTool,imageCardTool],
     //[katexGroupTool],//自定义,
     //[settingsGroupTool]
@@ -116,7 +116,10 @@ export const defaultOptions:EditorOptions = {
         new LinkJumpTipPlugin(),
         new OutlinesPlugin(),
         new WordCountPlugin(),
-        new WordCountSelected()
+        new WordCountSelected(),
+        new LibraryDrawerPlugin(true),
+        new LibraryDrawerPlugin(false),
+
     ],
     providers:[],
     //content:'<p>ddd</p>',
