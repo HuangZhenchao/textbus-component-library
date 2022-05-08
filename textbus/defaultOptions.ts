@@ -20,10 +20,13 @@ import { settingsGroupTool, } from "./utils/settings.group.tool";
 import {OutlinesPlugin,WordCountPlugin,WordCountSelected} from './plugin/_public-api'
 import { TreeGraphComponentLoader } from './components/antvG6/TreeGraph.component';
 import { LibraryDrawerPlugin } from './plugin/library.drawer.plugin';
+import { pageConfigComponentLoader } from './components/_config/config.component';
+import { PageConfigPlugin } from './plugin/page-config.plugin/pageConfig.plugin';
 
 //const controlPanel=new UIControlPanel();
 
 export const defaultComponentLoader=[
+    pageConfigComponentLoader,
     alertComponentLoader,//
     todoListComponentLoader,
     timelineComponentLoader,
@@ -115,11 +118,11 @@ export const defaultOptions:EditorOptions = {
         new Toolbar(defaultToolFactories),
         new LinkJumpTipPlugin(),
         new OutlinesPlugin(),
-        new WordCountPlugin(),
-        new WordCountSelected(),
+        //new WordCountPlugin(),
+        //new WordCountSelected(),
         new LibraryDrawerPlugin(true),
         new LibraryDrawerPlugin(false),
-
+        new PageConfigPlugin()
     ],
     providers:[],
     //content:'<p>ddd</p>',

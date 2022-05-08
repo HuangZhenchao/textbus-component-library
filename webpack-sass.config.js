@@ -39,7 +39,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'textbusLib.min.css'
+      filename: 'textbusLib-0.73.4.min.css'
     }),
     new DisableOutputWebpackPlugin(/textbus/)
   ]

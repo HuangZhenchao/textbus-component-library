@@ -33,14 +33,12 @@ export class CardToolTab{
         const tab = new Tab({});
         
         tab.show(tooTabPanels.map(panel => {
-            console.log(panel)
             const view = createElement('div', {
                 classes: ['textbus-component-stage-list']
             });
             panel.items.forEach(item => {
                 //var config=Object.assign(item.config)
-                var tool;
-                console.log("panel.items",item,alertExample)
+                var tool;                
                 switch(item.config.type){
                     case ToolType.Button:
                         tool= new ButtonCardTool(item.toolFactory,item.config);

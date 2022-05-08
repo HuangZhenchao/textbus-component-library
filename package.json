@@ -1,6 +1,6 @@
 {
   "name": "@huangzc/textbus",
-  "version": "0.73.3",
+  "version": "0.73.4",
   "private": false,
   "main": "./bundles/_public-api.ts",
   "scripts": {

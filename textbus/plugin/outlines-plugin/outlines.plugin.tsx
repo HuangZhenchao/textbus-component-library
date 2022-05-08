@@ -1,5 +1,5 @@
 import { fromEvent } from 'rxjs';
-import { sampleTime } from '@tanbo/stream';//renderer.js里的导入Subject来源应该改为rxjs
+import { sampleTime } from '@tanbo/stream';
 import {Layout} from '@textbus/editor'
 import {createElement, createTextNode, Plugin} from "@textbus/browser";
 import {Renderer, RootComponentRef, VElement} from "@textbus/core";

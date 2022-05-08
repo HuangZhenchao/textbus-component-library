@@ -13,24 +13,26 @@ export class ButtonCardTool{
         this.cardConfig=cardConfig;
     }
     setup(injector) {
-        this.config = Object.assign(this.factory(injector), this.cardConfig);
+        let config = Object.assign(this.factory(injector), this.cardConfig);
         const keyboard = injector.get(Keyboard);
         
-        const viewer=createCard(this.config);
+        const viewer=createCard(config);
         fromEvent(viewer.elementRef, 'click').subscribe(() => {
-            this.config.onClick();
+            config.onClick();
             //this.controller.hide();
         });
-        if (this.config.keymap) {
+        if (config.keymap) {
             keyboard.addShortcut({
-                keymap: this.config.keymap,
+                keymap: config.keymap,
                 action() {
                     if (!viewer.disabled) {
-                        this.config.onClick();
+                        //console.log("this.config",config)
+                        config.onClick();
                     }
                 }
             });
         }
+        this.config=config;
         this.viewer=viewer;
         this.elementRef=viewer.elementRef;
         return viewer.elementRef;
@@ -72,33 +74,36 @@ export class DialogCardTool{
     setup(injector){
         const keyboard = injector.get(Keyboard);
         const dialog = injector.get(Dialog);
-        this.config = Object.assign(this.factory(injector), this.cardConfig);
-        const viewer = createCard(this.config);
+        let config = Object.assign(this.factory(injector), this.cardConfig);
+        const viewer = createCard(config);
         fromEvent(viewer.elementRef, 'click').subscribe(() => {
-            dialog.show(this.config.viewController.elementRef);
+            dialog.show(config.viewController.elementRef);
             //this.controller.hide();
         });
         const defaultValue = {};
         let prevValue = defaultValue;
-        this.config.viewController.onComplete.subscribe(value => {
+        config.viewController.onComplete.subscribe(value => {
             prevValue = value;
-            this.config.useValue(value);
+            config.useValue(value);
             dialog.hide();
         });
-        this.config.viewController.onCancel.subscribe(() => {
+        config.viewController.onCancel.subscribe(() => {
             dialog.hide();
         });
-        if (this.config.keymap) {
+        if (config.keymap) {
             keyboard.addShortcut({
-                keymap: this.config.keymap,
+                keymap: config.keymap,
                 action() {
                     if (!viewer.disabled && prevValue !== defaultValue) {
-                        this.config.useValue(prevValue);
+                        config.useValue(prevValue);
                     }
                 }
             });
         }
-        return viewer.elementRef
+        this.config=config;
+        this.viewer=viewer;
+        this.elementRef=viewer.elementRef;
+        return viewer.elementRef;
     }
     disabled(is) {
         this.viewer.disabled = is;

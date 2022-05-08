@@ -34,7 +34,6 @@ export const alertComponent = defineComponent<ComponentMethods, AlertState>({
 
     changeController.onChange.subscribe(newState=>{
       state=newState;
-      console.log('changeController',state)
     })
     const form = new Form({
       confirmBtnText: '确定',
