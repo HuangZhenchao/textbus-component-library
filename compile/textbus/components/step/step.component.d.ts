@@ -6,5 +6,5 @@ export declare class StepSlot extends Slot {
 export interface stepState {
     step: number;
 }
-export declare const stepComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, stepState>, ComponentData<stepState>>;
+export declare const stepComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, stepState>, ComponentData<stepState, unknown>>;
 export declare const stepComponentLoader: ComponentLoader;

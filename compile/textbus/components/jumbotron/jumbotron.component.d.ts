@@ -9,5 +9,5 @@ export interface jumbotronState {
     backgroundSize: string;
     backgroundPosition: string;
 }
-export declare const jumbotronComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, jumbotronState>, ComponentData<jumbotronState>>;
+export declare const jumbotronComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, jumbotronState>, ComponentData<jumbotronState, unknown>>;
 export declare const jumbotronComponentLoader: ComponentLoader;

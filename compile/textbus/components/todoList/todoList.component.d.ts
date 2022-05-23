@@ -4,5 +4,5 @@ export interface todoListState {
     active: boolean;
     disabled: boolean;
 }
-export declare const todoListComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, todoListState>, ComponentData<todoListState>>;
+export declare const todoListComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, todoListState>, ComponentData<todoListState, unknown>>;
 export declare const todoListComponentLoader: ComponentLoader;

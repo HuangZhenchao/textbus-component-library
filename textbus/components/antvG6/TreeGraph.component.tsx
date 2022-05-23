@@ -15,6 +15,7 @@ import "./TreeGraph/registerNode"
 import { useDragResize } from "@textbus/editor";
 import {DateFormat} from "../../utils/Date"
 import { componentStyle } from "../type";
+import { treeGraph } from "./TreeGraph/TreeGraph";
 export interface TreeGraphState{
     style:componentStyle
     code:string;
@@ -57,11 +58,11 @@ export const TreeGraphComponent=defineComponent<ComponentMethods,TreeGraphState>
                 const container=VElement.createElement('div',{
                         ref,
                         id:id,
-                        class:"tb-graph",
-                        style:state.style,
+                        class:"tb-treegraph",
+                        style:state.style,                        
                         onClick:(e)=>{
                             //let pSlot=instance.parent;
-                            selection.selectComponent(instance)
+                            //selection.selectComponent(instance)
                             //selection.setPosition(pSlot,0)
                             //selection.unSelect()
                             //selection.restore();
@@ -69,7 +70,20 @@ export const TreeGraphComponent=defineComponent<ComponentMethods,TreeGraphState>
                             
                             console.log("selectComponent")
                         }
-                    },
+                    },[
+                        new VElement('div',{
+                            class:"tb-treegraph-code",
+                            style:{
+                                display:"none"
+                            }
+                        },[new VTextNode(state.code)]),
+                        new VElement('div',{
+                            class:"tb-treegraph-data",
+                            style:{
+                                display:"none"
+                            }
+                        },[new VTextNode(state.data)])
+                    ]
                 );
                 if(!isOutputMode&&ref.current){
                     var refDom=ref.current
@@ -97,14 +111,14 @@ export const TreeGraphComponentLoader:ComponentLoader={
     component: TreeGraphComponent,
 
     match(element: HTMLElement) {
-        return element.tagName.toLowerCase() === 'div' && element.className === 'tb-graph'
+        return element.tagName.toLowerCase() === 'div' && element.className === 'tb-treegraph'
     },
     read(element: HTMLElement, context: Injector, slotParser: SlotParser) :ComponentInstance{
         const style = element.style;
         const state:TreeGraphState={
             style:{},
-            code: "",
-            data: ""
+            code: element.querySelector(".tb-treegraph-code")?.textContent||treeGraph.FunctionString,
+            data: element.querySelector(".tb-treegraph-data")?.textContent||treeGraph.DataString
         }
         //slotParser(state.slot,element)
         return TreeGraphComponent.createInstance(context,{state:state});
@@ -114,7 +128,7 @@ export const TreeGraphComponentLoader:ComponentLoader={
     
     resources: {
         styles: [
-            `.tb-graph {
+            `.tb-treegraph {
                 display: block;
                 min-width:500px;
                 min-height: 500px;

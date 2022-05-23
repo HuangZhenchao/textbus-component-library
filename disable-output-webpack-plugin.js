@@ -9,7 +9,9 @@ function DisableOutputWebpackPlugin(reg) {
   DisableOutputWebpackPlugin.prototype.apply = function (compiler) {
     compiler.hooks.emit.tapAsync('DisableOutputWebpackPlugin', (compilation, callback) => {
       Object.keys(compilation.assets).forEach(asset => {
+        console.log("asset",asset)
         if (!this.reg.test(asset)) {
+          console.log("compilation.assets[asset]",compilation.assets[asset])
           delete compilation.assets[asset]
         }
       });

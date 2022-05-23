@@ -4,7 +4,7 @@ import {
     ContentType,
     defineComponent, Slot, SlotRender,
     Translator,
-    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode, ComponentData, onViewInit, Ref, useRef
+    useContext, useSlots, useState, VElement,Selection, ComponentOptions, SlotLiteral, VTextNode, ComponentData, onViewInit, Ref, useRef, useSelf
 } from "@textbus/core";
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
@@ -35,7 +35,9 @@ export const cesiumComponent=defineComponent<ComponentMethods,cesiumState>({
     setup(data: ComponentData<cesiumState>): ComponentMethods {
         let state=data.state as cesiumState;
         const changeController=useState(state);
-
+        let injector=useContext();
+        let selection=injector.get(Selection)
+        let instance=useSelf()
         //useState({fill:false,type:'info',slot:slots.toJSON()})
         changeController.onChange.subscribe(newState=>{
             state=newState;
@@ -63,7 +65,17 @@ export const cesiumComponent=defineComponent<ComponentMethods,cesiumState>({
                 const vEle = VElement.createElement("div", {
                     ref,
                     class:'tb-cesiumMap',
-                    style:state.style
+                    style:state.style,
+                    onClick:(e)=>{
+                        //let pSlot=instance.parent;
+                        selection.selectComponent(instance)
+                        //selection.setPosition(pSlot,0)
+                        //selection.unSelect()
+                        //selection.restore();
+                        //selection.selectComponent(instance,true)
+                        
+                        console.log("selectComponent")
+                    }
                  },VElement.createElement('div',{id:id,class:"map-container"})
                 );
                 if(!isOutputMode&&ref.current){

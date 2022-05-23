@@ -16,7 +16,11 @@ import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
 import {SlotLiteral} from "@textbus/core";
 
-
+export interface timelineState{
+}
+export interface timelineSlotState{
+    type:string;
+}
 export class TimelineItemSlot extends Slot{
     constructor(type) {
         super([ContentType.BlockComponent,ContentType.Text],{
@@ -25,22 +29,17 @@ export class TimelineItemSlot extends Slot{
         this.write('时间线')
     }
 }
-export interface timelineSlot{
-    itemSlots: TimelineItemSlot[];
-}
-export interface timelineSlotLiteral{
-    itemSlotLiterals:SlotLiteral[]
-}
+
 const timelineTypes = ['primary', 'info', 'success', 'warning', 'danger', 'dark', 'gray'];
 const colors = ['#1296db', '#6ad1ec', '#15bd9a', '#ff9900', '#E74F5E', '#495060', '#bbbec4'];
 
-export const timelineComponent=defineComponent<ComponentMethods,null>({
+export const timelineComponent=defineComponent<ComponentMethods,timelineState>({
     name: "timelineComponent",
     type: ContentType.BlockComponent,
 
-    setup(data: ComponentData<null>): ComponentMethods {
+    setup(data: ComponentData<timelineState,timelineSlotState>): ComponentMethods {
 
-        const slots = useSlots(data.slots || [ new TimelineItemSlot('primary')], )
+        const slots = useSlots(data.slots || [ new TimelineItemSlot('primary')])
         //slots.get(0).state.type=''
         let state={}
         const changeController=useState(state);

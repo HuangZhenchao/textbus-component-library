@@ -7,5 +7,5 @@ export interface TreeGraphState {
     code: string;
     data: string;
 }
-export declare const TreeGraphComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, TreeGraphState>, ComponentData<TreeGraphState>>;
+export declare const TreeGraphComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, TreeGraphState>, ComponentData<TreeGraphState, unknown>>;
 export declare const TreeGraphComponentLoader: ComponentLoader;

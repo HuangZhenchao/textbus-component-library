@@ -8,12 +8,12 @@ Vue.use(VueRouter);
 export const constantRoutes = [ 
   {
     path: '/',
-    redirect: '/textbusTest',
+    redirect: '/note',
 
   },
   {
-    path:'/textbusTest',
-    name:'textbusTest',
+    path:'/note',
+    name:'note',
     component: () => import('@/views/Index.vue'),
     //redirect:'/tagManager/video',
     meta: { title: '标签管理', icon: 'figure' },

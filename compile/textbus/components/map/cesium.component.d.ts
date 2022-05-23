@@ -7,5 +7,5 @@ export interface cesiumState {
     markers: any;
     zoom: any;
 }
-export declare const cesiumComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, cesiumState>, ComponentData<cesiumState>>;
+export declare const cesiumComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, cesiumState>, ComponentData<cesiumState, unknown>>;
 export declare const cesiumComponentLoader: ComponentLoader;

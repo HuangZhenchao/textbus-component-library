@@ -6,5 +6,5 @@ export interface ProgressState {
     max: number;
     min: number;
 }
-export declare const progressComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, ProgressState>, ComponentData<ProgressState>>;
+export declare const progressComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, ProgressState>, ComponentData<ProgressState, unknown>>;
 export declare const progressComponentLoader: ComponentLoader;

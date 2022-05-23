@@ -12,11 +12,10 @@ class api {
         image: (param) => Request.post(`/api/upload/image`,param),
     }
     public static r={
-        cnote:(param)=>Request.post('/api/r/cnote',param)
+        note:(param)=>Request.post('/api/r/note',param)
     }
     public static u={
-        cnote:(param)=>Request.post('/api/u/cnote',param),
-        notehtml:(param)=>Request.post('/api/u/notehtml',param),
+        note:(param)=>Request.post('/api/u/note',param),
     }
 }
 export {

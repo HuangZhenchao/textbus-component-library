@@ -9,7 +9,7 @@ export interface imageCardState {
     margin?: string | undefined;
     float?: string | undefined;
 }
-export declare const imageCardComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, imageCardState>, ComponentData<imageCardState>>;
+export declare const imageCardComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, imageCardState>, ComponentData<imageCardState, unknown>>;
 export declare const imageCardComponentLoader: ComponentLoader;
 export declare class imageCardComponentSetter {
 }

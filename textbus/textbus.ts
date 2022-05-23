@@ -13,13 +13,14 @@ export interface OutputSetting{
 }
 
 export interface TextbusConfig{
-    uploadFilePromise?: Function;
-    componentLoaders?: [];
-    formatLoaders?: [];
-    toolFactories?: [];
-    host?: string | HTMLElement;
-    outputSetting:OutputSetting
+    uploadFilePromise?: Function;//上传文件的方法
+    componentLoaders?: [];//自定义组件加载器
+    formatLoaders?: [];//自定义格式加载器
+    toolFactories?: [];//自定义工具栏
+    host?: string | HTMLElement;//工具栏容器
+    outputSetting:OutputSetting;//导出配置
 }
+
 export class TextbusApp{
     editor:Editor
     selector:string | HTMLElement
@@ -36,16 +37,18 @@ export class TextbusApp{
 
         selfConfig.uploadFilePromise?defaultOptions.uploader=SetUploader(selfConfig.uploadFilePromise):'';
         
-        this.editor = new Editor(selector,defaultOptions);
+        this.editor = new Editor(defaultOptions);
+        this.editor.mount(selector);
         this.editor.onChange.pipe(auditTime(selfConfig.outputSetting.saveInterval||0)).subscribe(() => {
             this.onSave();
         })
     }
     replaceContent(content){
         this.editor.replaceContent(content);
+        //this.editor.layout.scroller.scrollTo({top:0})
     }
     onSave(){
-        let outputSetting=this.selfConfig.outputSetting
+        let outputSetting=this.selfConfig.outputSetting 
         if(outputSetting.cbSaveJSON){
             outputSetting.cbSaveJSON(JSON.stringify(this.editor.getJSON().content,null,"  "))
         }

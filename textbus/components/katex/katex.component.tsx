@@ -9,6 +9,7 @@ import {
 import {ComponentLoader, SlotParser} from "@textbus/browser";
 import {Injector} from "@tanbo/di";
 import * as Katex from 'katex';
+import "katex/dist/katex.min.css"
 import { Dialog, Form, FormSelect, FormSwitch, FormTextarea } from "@textbus/editor";
 import { FormTextareaColumn } from "../../utils/form/form-textarea-column";
 export interface katexState{
@@ -143,12 +144,12 @@ export const katexInlineComponentLoader:ComponentLoader={
     
     resources: {
         links:[{
-            rel: 'stylesheet',
+            //rel: 'stylesheet',
             //type:'text/css',
-            href: 'https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css',
+            //href: 'https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css',
             //href:'./katex.min.css',
             //integrity: 'sha384-t5CR+zwDAROtph0PXGte6ia8heboACF9R5l/DiY+WZ3P2lxNgvJkQk5n7GPvLMYw',
-            crossOrigin: 'anonymous'
+            //crossOrigin: 'anonymous'
         }],
         styles: [
             `.tb-katex-block{display: block}

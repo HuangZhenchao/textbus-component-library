@@ -1,23 +1,26 @@
 import { ComponentLoader, SlotParser } from "@textbus/browser";
 import { defineComponent, ComponentMethods, ContentType, ComponentData, useContext, Translator, SlotRender, 
   VElement, useState, ComponentInstance, Injector,Selection} from "@textbus/core";
-import { Dialog } from "@textbus/editor";
+import { Dialog, Layout } from "@textbus/editor";
 import { AlertState } from "../_public-api";
 import {JsNewGuid} from "../../utils/common"
-export interface ConfigState{
+export interface PageConfigState{
     pageID:string;
     scrollTop:number;
   }
   
-export const pageConfigComponent = defineComponent<ComponentMethods, ConfigState>({
+export const pageConfigComponent = defineComponent<ComponentMethods, PageConfigState>({
     type: ContentType.BlockComponent,
     name: 'pageConfigComponent',
-    setup(data: ComponentData<ConfigState>): ComponentMethods {
+    setup(data: ComponentData<PageConfigState>): ComponentMethods {
         const injector = useContext();
+        const layout=injector.get(Layout);
+        //this.layout.container.parentNode.prepend(this.leftContainer);
+        const scroller=layout.scroller
         const translator=injector.get(Translator);
         const dialog = injector.get(Dialog);
         const selection = injector.get(Selection);
-        let state=data.state as ConfigState;
+        let state=data.state as PageConfigState;
         const changeController=useState(state);
 
         changeController.onChange.subscribe(newState=>{
@@ -32,17 +35,6 @@ export const pageConfigComponent = defineComponent<ComponentMethods, ConfigState
                   }        
               )
               return vNode
-            /*
-            return (
-                <div class={ classes }>
-                <div>这是 Alert 组件，这里的内容是不可以编辑的</div>
-                {
-                    slotRender(slots.get(0)!, () => {
-                    return <div/>
-                    })
-                }
-                </div>
-            )*/
             }
         }
     }
@@ -57,7 +49,7 @@ export const pageConfigComponentLoader: ComponentLoader = {
     read(element: HTMLElement, context: Injector, slotParser: SlotParser): ComponentInstance {
       //TODO:从html读取时取出fill和type
   
-      const configState:ConfigState={
+      const configState:PageConfigState={
           pageID:element.getAttribute("pageID")||JsNewGuid(),
           scrollTop:Number(element.getAttribute("scrollTop"))||0
       }

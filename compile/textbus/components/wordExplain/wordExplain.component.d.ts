@@ -17,5 +17,5 @@ export interface wordExplainState {
     subtitleSlot:WordExplainSubtitleSlot,
     detailSlot:WordExplainDetailSlot,
  */
-export declare const wordExplainComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, wordExplainState>, ComponentData<wordExplainState>>;
+export declare const wordExplainComponent: import("@textbus/core").Component<ComponentInstance<ComponentMethods, wordExplainState>, ComponentData<wordExplainState, unknown>>;
 export declare const wordExplainComponentLoader: ComponentLoader;
